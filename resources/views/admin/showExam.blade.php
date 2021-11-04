@@ -19,6 +19,12 @@
             {{session('complete')}}!
         </div>
     @endif
+    @if (Session('error'))
+    <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{session('error')}}!
+    </div>
+@endif
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -44,8 +50,10 @@
                         @foreach ($exams as $exam)
                             <tr>
                                 <td>ex-{{$exam->id}}</td>                               
-                                <td>{{$exam->title}}</td>                  
-                                <td>K3TH2</td>
+                                <td>{{$exam->title}}</td>
+                                @foreach ($exam->cclass as $ec)
+                                <td>{{$ec->class_name}}</td>
+                                @endforeach                  
                                 <td>{{$exam->total_marks}} điểm</td>
                                 <td>{{$exam->dateTime_Open}}</td>
                                 <td>
@@ -60,7 +68,7 @@
                                 <td>
                                     <div class="text-center">
                                         <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('admin/delete/exam/'.$exam->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

@@ -20,6 +20,12 @@
             {{session('complete')}}!
         </div>
     @endif
+    @if (session('error'))
+    <div class="alert alert-danger alert-dismissibletext-center position-fixed" id="bt-alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{session('error')}}!
+    </div>
+@endif
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -53,7 +59,6 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -70,7 +75,13 @@
                         @foreach ($teachers as $teacher)
                             <tr>
                                 <td>GV-{{$teacher->id}}</td>
-                                <td class="text-center" ><img src="{{asset($teacher->avatar)}}" alt="" width="35px" height="35px"></td>
+                                <td class="text-center" >
+                                    @if ($teacher->avatar!='')
+                                        <img src="{{asset($teacher->avatar)}}" alt="" width="35px" height="35px">
+                                    @else
+                                        <img src="{{asset('img/user.png')}}" alt="" width="35px" height="35px">
+                                    @endif
+                                </td>
                                 <td>{{$teacher->name}}</td>
                                 <td>{{$teacher->email}}</td>
                                 <td>
@@ -90,7 +101,7 @@
                                 <td>
                                     <div class="text-center">
                                         <a href="{{URL::to('/admin/getEditTeacher/'.$teacher->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('/admin/delete/teacher/'.$teacher->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -100,7 +111,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('script')

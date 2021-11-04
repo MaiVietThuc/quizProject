@@ -102,7 +102,11 @@
                     <div class="form-group mb-3">
                         <div class="fallback">
                             <label for="image1">Ảnh đại diện<span class="text-danger"> : </span></label><br>
-                            <img src="{{asset($student->avatar)}}" height="100" width="100" alt=""/>
+                            @if (!empty($student->avatar))
+                                <img src="{{asset($student->avatar)}}" alt="" width="35px" height="35px">
+                            @else
+                                <img src="{{asset('img/user.png')}}" alt="" width="35px" height="35px">
+                            @endif
                             <input  name="avatar" type="file" rows="3" id="avatar"/>
                         </div>
                     </div>
@@ -134,8 +138,8 @@
                     </div>
 
                     <div class="text-center mb-3" >
-                        <button type="button" class="btn btn-danger mr-3">Hủy</button>
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <a onclick="cancelConfirm()" href="{{URL::to('/admin/student')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
                     </div>
 
 

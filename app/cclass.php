@@ -33,4 +33,8 @@ class cclass extends Model
         return $this->belongsToMany(student::class,'class_student','class_id','student_id');
     }
     
+    public function exam()
+    {
+        return $this->belongsToMany(exam::class,'exam_class','class_id','exam_id');
+    }
 }

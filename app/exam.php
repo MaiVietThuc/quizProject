@@ -20,4 +20,8 @@ class exam extends Model
     public function exam_class(){
         return $this -> hasMany('App\exam_class','exam_id','id');
     }
+    public function cclass()
+    {
+        return $this->belongsToMany(cclass::class,'exam_class','exam_id','class_id');
+    }
 }

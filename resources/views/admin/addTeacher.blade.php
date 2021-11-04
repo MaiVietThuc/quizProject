@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="text-center mb-3" >
-                        <a href="{{URL::to('/admin/teacher')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
+                        <a onclick="cancelConfirm()" href="{{URL::to('/admin/teacher')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
                         <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
 

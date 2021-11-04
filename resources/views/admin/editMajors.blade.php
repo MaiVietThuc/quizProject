@@ -7,7 +7,7 @@
             <li class="breadcrumb-item"><a href="#"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
             <li class="breadcrumb-item" aria-current="page"><a href="{{URL::to('/admin/majors')}}">Quản lý chuyên ngành</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Thêm chuyên ngành</li>
+            <li class="breadcrumb-item active" aria-current="page">Sửa chuyên ngành</li>
         </ol>
     </nav>
 
@@ -29,7 +29,7 @@
         </div>
     @endif
     <!-- mainform -->
-    <form class="" action="{{URL::to('/admin/postAddMajors')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+    <form class="" action="{{URL::to('/admin/postEditMajors/'.$major->id)}}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-3"></div>
@@ -39,12 +39,12 @@
                     
                     <div class="form-group mb-3">
                         <label for="product-name">Mã chuyên ngành:<span class="text-danger">*</span></label>
-                        <input type="text" id="mcn" name="mcn" class="form-control" placeholder="Mã chuyên ngành">
+                        <input type="text" id="mcn" name="mcn" class="form-control" placeholder="Mã chuyên ngành" value="{{$major->majors_code}}">
                     </div>
 
                     <div class="form-group mb-3">
                         <label for="product-name">Tên chuyên ngành:<span class="text-danger">*</span></label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Tên chuyên ngành">
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Tên chuyên ngành" value="{{$major->name}}">
                     </div>
 
                     <div class="form-group mb-3">
@@ -52,12 +52,19 @@
                         <br/>
                         <div class="radio form-check-inline mr-4">
                             <label for="inlineRadio1">
-                                <input type="radio" id="inlineRadio1" value="1" name="status" checked=""> 
+                                @if ($major->status ==1)
+                                    <input type="radio" id="inlineRadio1" value="1" name="status" checked=""> 
+                                @else
+                                    <input type="radio" id="inlineRadio2" value="1" name="status">
+                                @endif                    
                                 Khả dụng:
                             </label>
                         </div>
                         <div class="radio form-check-inline">
                             <label for="inlineRadio2">
+                                @if ($major->status ==0)
+                                <input type="radio" id="inlineRadio2" value="0" name="status" checked>
+                                @endif
                                 <input type="radio" id="inlineRadio2" value="0" name="status">
                                  Ẩn:
                             </label>
@@ -67,7 +74,7 @@
 
                     <div class="text-center mb-3" >
                         <a onclick="cancelConfirm()" href="{{URL::to('/admin/majors')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
                     </div>
 
                 </div> <!-- end card-box -->

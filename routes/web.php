@@ -43,19 +43,25 @@ Route::prefix('admin')->group(function () {
     Route::get('/getAddMajors',function(){
         return view('admin.addMajors');
     });
+    Route::get('/getAddAdmin','AdminController@getAddAdmin');
 
     // post add
     Route::post('/postAddStudent','AdminController@postAddStudent');
     Route::post('/postAddTeacher','AdminController@postAddTeacher');
     Route::post('/postAddMajors','AdminController@postAddMajors');
+    Route::post('/postAddAdmin','AdminController@postAddAdmin');
 
     // get edit
     Route::get('/getEditStudent/{id}','AdminController@getEditStudent');
     Route::get('/getEditTeacher/{id}','AdminController@getEditTeacher');
+    Route::get('/getEditMajors/{id}','AdminController@getEditMajors');
+    Route::get('/getEditAdmin/{id}','AdminController@getEditAdmin');
 
     // post edit
     Route::post('/postEditStudent/{id}','AdminController@postEditStudent');
     Route::post('/postEditTeacher/{id}','AdminController@postEditTeacher');
+    Route::post('/postEditMajors/{id}','AdminController@postEditMajors');
+    Route::post('/postEditAdmin/{id}','AdminController@postEditAdmin');
 
     // change status
     Route::get('/changeTeacherStatus/{id}/{status}','AdminController@changeTeacherStatus');
@@ -63,5 +69,16 @@ Route::prefix('admin')->group(function () {
     Route::get('/changeAdminStatus/{id}/{status}','AdminController@changeAdminStatus');
     Route::get('/changeClassStatus/{id}/{status}','AdminController@changeClassStatus');
     Route::get('/changeMajorsStatus/{id}/{status}','AdminController@changeMajorsStatus');
+
+    // delete
+    Route::prefix('delete')->group(function(){
+        Route::get('/teacher/{id}','AdminController@deleteTeacher');
+        Route::get('/student/{id}','AdminController@deleteStudent');
+        Route::get('/admin/{id}','AdminController@deleteAdmin');
+        Route::get('/majors/{id}','AdminController@deleteMajors');
+        Route::get('/class/{id}','AdminController@deleteClass');
+        Route::get('/feedback/{id}','AdminController@deleteFeedback');
+    });
+    
 });
 

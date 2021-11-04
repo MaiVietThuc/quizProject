@@ -64,8 +64,8 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a href="{{URL::to('admin/getEditClass/'.$cls->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('admin/delete/class/'.$cls->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

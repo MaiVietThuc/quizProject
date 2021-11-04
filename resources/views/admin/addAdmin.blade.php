@@ -4,15 +4,15 @@
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent">
-            <li class="breadcrumb-item"><a href="{{URL::to('/admin/')}}"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <li class="breadcrumb-item"><a href="#"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
-            <li class="breadcrumb-item" aria-current="page"><a href="{{URL::to('/admin/teacher')}}">Quản lý giảng viên</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Sửa giảng viên</li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{{URL::to('/admin/teacher')}}">Quản lý admin</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Thêm admin</li>
         </ol>
     </nav>
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800 pl-3">Sửa giảng viên</h1>
+    <h1 class="h3 mb-4 text-gray-800 pl-3">Thêm admin</h1>
     @if(count($errors) > 0)
         @foreach ($errors->all() as $err)
             <div class="alert alert-danger alert-dismissible">
@@ -29,7 +29,7 @@
         </div>
     @endif
     <!-- mainform -->
-    <form class="" action="{{URL::to('/admin/postEditTeacher/'.$teacher->id.'')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+    <form class="" action="{{URL::to('/admin/postAddAdmin')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-6">
@@ -37,38 +37,19 @@
                     <h5 class="text-uppercase bg-light p-2 mt-0 mb-3">Bắt buộc</h5>
 
                     <div class="form-group mb-3">
-                        <label for="product-name">Tên giảng viên:<span class="text-danger">*</span></label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Tên giảng viên" value="{{$teacher->name}}">
+                        <label for="product-name">Tên admin:<span class="text-danger">*</span></label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Tên admin">
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="product-summary">Email:</label>
-                        <input class="form-control" name="email"  rows="2" placeholder="email" autocomplete="false" value="{{$teacher->email}}">
-                    </div>
+                        <label for="product-summary">Email:<span class="text-danger">*</span></label>
+                        <input class="form-control" name="email"  rows="2" placeholder="email" autocomplete="false">
+                    </div>         
 
                     <div class="form-group mb-3">
-                            <label for="product-category">Giới tính:<span class="text-danger">*</span></label>
-                            <select class="form-control select2" name="gender" id="gender">
-                                @if ($teacher->gender ==0)
-                                    <option selected value="0">Nam</option>
-                                    <option value="1">Nữ</option>
-                                @else
-                                    <option selected value="1">Nữ</option>
-                                    <option value="0">Nam</option>
-                                @endif     
-                            </select>
-                    </div>             
-
-                    <div class="form-group mb-3">
-                        <div class="radio form-check mr-4 pl-0 mt-4">
-                            <label for="changepw">
-                                <input type="checkbox" id="changepw" value="1" name="changepw"> 
-                                Đổi mật khẩu
-                            </label>
-                        </div>   
                         <label for="product-reference">Mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-password">                                            
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Mật khẩu" autocomplete="false" disabled>                                  
+                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -80,7 +61,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Xác nhật mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-confirm-pw">
-                            <input type="password"  name="password_confirmation" id="password-confirm" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false" disabled>
+                            <input type="password"  name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false">
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -94,31 +75,23 @@
             <div class="col-lg-6">
 
                 <div class="card-box shadow col-10  mr-5 pt-3 pb-3">
-                    <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Thông tin tùy chọn</h5>                   
+                    <h5 class="text-uppercase mt-0 mb-3 bg-light p-2"></h5>                   
 
                     
-                    <div class="form-group mb-3">
-                        <label class="mb-2">Môn giảng dạy</label>
-                        <div class="form-control"  style="height: 11rem;overflow-y: scroll;">
-                            @foreach ($teach_subj as $ts)
-                                <input type="checkbox" id="subject_{{$ts->id}}" name="subjects[]" value="{{$ts->id}}" checked>
-                                <label class="mb-0 pb-2" style="width:90%" for="subject_{{$ts->id}}">{{$ts->subject_name}}</label><br>
+                    <div class="form-group mb-4">
+                        <p class="mb-3 border-bottom">Quyền admin:</p>                  
+                            @foreach ($role as $rol)  
+                            <div class="radio form-check-inline mr-5" title="{{$rol->inf}}">                       
+                                <label for="role_{{$rol->id}}">{{$rol->role_name}}
+                                    <input type="radio" id="role_{{$rol->id}}" name="role" value="{{$rol->id}}">
+                                </label>
+                            </div>
                             @endforeach
-                            @foreach ($subjects as $sb)
-                                <input type="checkbox" id="subject_{{$sb->id}}" name="subjects[]" value="{{$sb->id}}">
-                                <label class="mb-0 pb-2" style="width:90%" for="subject_{{$sb->id}}">{{$sb->subject_name}}</label><br>
-                            @endforeach
-                        </div>
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-4">
                         <div class="fallback">
                             <label for="image1">Ảnh đại diện<span class="text-danger"> : </span></label><br>
-                            @if ($teacher->avatar!='')
-                                <img src="{{asset($teacher->avatar)}}" alt="" width="35px" height="35px">
-                            @else
-                                <img src="{{asset('img/user.png')}}" alt="" width="35px" height="35px">
-                            @endif
                             <input  name="avatar" type="file" rows="3" id="avatar"/>
                         </div>
                     </div>
@@ -128,21 +101,13 @@
                         <br/>
                         <div class="radio form-check-inline mr-4">
                             <label for="inlineRadio1">
-                                @if($teacher->status==1)
-                                <input type="radio" id="inlineRadio1" value="1" name="status" checked> 
-                                @else
-                                <input type="radio" id="inlineRadio1" value="0" name="status" > 
-                                @endif
+                                <input type="radio" id="inlineRadio1" value="1" name="status" checked=""> 
                                 Khả dụng:
                             </label>
                         </div>
                         <div class="radio form-check-inline">
                             <label for="inlineRadio2">
-                                @if($teacher->status==0)
-                                <input type="radio" id="inlineRadio1" value="0" name="status" checked> 
-                                @else
-                                <input type="radio" id="inlineRadio1" value="1" name="status" > 
-                                @endif
+                                <input type="radio" id="inlineRadio2" value="0" name="status">
                                  Ẩn:
                             </label>
                         </div>
@@ -151,7 +116,7 @@
 
                     <div class="text-center mb-3" >
                         <a onclick="cancelConfirm()" href="{{URL::to('/admin/teacher')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
-                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
 
 
@@ -192,25 +157,9 @@
             });
         });
     </script>
-
     <script>
         window.onbeforeclose = function() {
             return "";
         }
-    </script>
-
-    <script>
-        const isChangepwCB = document.getElementById('changepw');
-        const pwInput = document.getElementById('password');
-        const rePwInput = document.getElementById('password-confirm');
-        isChangepwCB.addEventListener('change',function(){
-            if(this.checked){
-                pwInput.disabled = false;
-                rePwInput.disabled = false;
-            }else{
-                pwInput.disabled = true;
-                rePwInput.disabled = true;
-            }
-        });
     </script>
 @endsection

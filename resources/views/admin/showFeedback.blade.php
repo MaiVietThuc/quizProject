@@ -20,6 +20,13 @@
         </div>
     @endif
 
+    @if (Session('error'))
+    <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{session('error')}}!
+    </div>
+@endif
+
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -58,7 +65,7 @@
                                 <td>
                                     <div class="text-center">
                                         <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('admim/delete/feedback/'.$fb->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

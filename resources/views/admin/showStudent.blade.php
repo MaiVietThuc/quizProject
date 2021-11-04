@@ -98,7 +98,7 @@
                                 <td>
                                     <div class="text-center">
                                         <a href="{{URL::to('/admin/getEditStudent/'.$student->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('/admin/delete/student/'.$student->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -121,10 +121,11 @@
                     searchPlaceholder: "Tìm kiếm..."
                 },
                 "columnDefs": [ {
-                "targets": [6],
+                "targets": [7],
                 "orderable": false
                 } ]
             });
         });
-    </script>    
+    </script> 
+       
 @endsection

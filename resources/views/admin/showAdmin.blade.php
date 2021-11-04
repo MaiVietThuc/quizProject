@@ -19,11 +19,20 @@
             {{session('complete')}}!
         </div>
     @endif
+    @if (Session('error'))
+    <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{session('error')}}!
+    </div>
+@endif
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách admin</h5>
+            <div class="wrap d-inline-block float-right">
+                <a class="dropdown-item pt-2 pb-2" href="{{URL::to('admin/getAddAdmin')}}"><i class="fas fa-pen pr-2"></i>Thêm</a>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -52,7 +61,7 @@
                                                
                                 <td>{{$adm->name}}</td>   
                                 <td>{{$adm->email}}</td>
-                                <td>{{$adm->role_id}}</td>                         
+                                <td>{{$adm->admin_role->role_name}}</td>                         
                                 <td>
                                     <div class="text-center">
                                         @if ($adm->status ==1)
@@ -64,8 +73,8 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a href="" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        <a href="{{URL::to('admin/getEditAdmin/'.$adm->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
+                                        <a onclick="deleteConfirm()" href="{{URL::to('admin/delete/admin/'.$adm->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

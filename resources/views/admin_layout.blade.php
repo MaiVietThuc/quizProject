@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="{{asset('/tracnghiemtructuyen-favicon.png')}}" type="image/x-icon" />
     <title>Admin side</title>
 
     <!-- bootstrap 4.5 -->
@@ -233,6 +234,27 @@
         $("#bt-alert").fadeTo(2000, 500).slideUp(500, function(){
             $("#bt-alert").slideUp(500);
         });
+    </script>
+    <script>
+        function deleteConfirm(){
+            if (confirm('Dữ liệu đã xóa không thể phục hồi, Bạn có chắc muốn xóa?'))
+            {
+                return true;
+            }else{
+                event.stopPropagation();
+                event.preventDefault();
+            };
+        }
+
+        function cancelConfirm(){
+            if (confirm('Dữ liệu chưa được lưu, Bạn có chắc muốn thoát?'))
+            {
+                return true;
+            }else{
+                event.stopPropagation();
+                event.preventDefault();
+            };
+        }
     </script>
 </body>
 
