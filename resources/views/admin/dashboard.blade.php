@@ -10,7 +10,18 @@
 
     <!-- main content -->
     <div class="row">
-
+        @if (Session('success'))
+        <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{session('success')}}!
+        </div>
+    @endif
+    @if (Session('error'))
+        <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{session('error')}}!
+        </div>
+    @endif
     <!-- card dashboard -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">

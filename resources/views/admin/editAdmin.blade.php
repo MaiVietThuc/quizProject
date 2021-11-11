@@ -29,7 +29,7 @@
         </div>
     @endif
     <!-- mainform -->
-    <form class="" action="{{URL::to('/admin/postEditAdmin')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+    <form class="" action="{{URL::to('/admin/postEditAdmin/'.$admin->id.'')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-6">
@@ -55,7 +55,7 @@
                         </div>
                         <label for="product-reference">Mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-password">                                            
-                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -67,7 +67,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Xác nhật mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-confirm-pw">
-                            <input type="password"  name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false">
+                            <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false" disabled>
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -134,8 +134,8 @@
                     </div>
 
                     <div class="text-center mb-3" >
-                        <a onclick="cancelConfirm()" href="{{URL::to('/admin/teacher')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <a onclick="cancelConfirm()" href="{{URL::to('/admin/adminAccount')}}"><button type="button" class="btn btn-danger mr-3">Hủy</button></a>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
                     </div>
 
 
@@ -180,5 +180,19 @@
         window.onbeforeclose = function() {
             return "";
         }
+    </script>
+    <script>
+        const isChangepwCB = document.getElementById('changepw');
+        const pwInput = document.getElementById('password');
+        const rePwInput = document.getElementById('password-confirm');
+        isChangepwCB.addEventListener('change',function(){
+            if(this.checked){
+                pwInput.disabled = false;
+                rePwInput.disabled = false;
+            }else{
+                pwInput.disabled = true;
+                rePwInput.disabled = true;
+            }
+        });
     </script>
 @endsection

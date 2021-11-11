@@ -14,23 +14,29 @@ class AdminController extends Controller
 
     public function adminLogin(Request $request)
     {
+        $this->validate($request,[
+            'email' => 'required|',
+            'password' => 'required|min:6',
+        ]);
         $arr = [
             'email' => $request->email,
             'password' => $request->password,
         ];
           
         if (Auth::guard('admin')->attempt($arr)) {
-            echo 'đăng nhập thành công';
+            return redirect('/admin/')->with('success','Chào mừng '.Auth::guard('admin')->user()->name.'!!');
         } else {
-            echo 'tài khoản và mật khẩu chưa chính xác';
-            var_dump($arr);
-            if (Auth::check()) {
-                dd('ddax đăng nhập');
-            } else {
-                     dd('chua đăng nhập');                    
-            }
+            return redirect('/adminlogin')->with('error', 'Thông tin đăng nhập không chính xác!!'); 
         }
     }
+    public function adminLogout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect('/adminlogin');
+    }
+
+
+
 
     public function getDashboard()
     {
@@ -79,7 +85,7 @@ class AdminController extends Controller
     }
     public function getAdminAccount()
     {
-        $admins = App\admin::all();
+        $admins = App\admin::all()->except(Auth::guard('admin')->id());
         return view('admin.showAdmin',compact('admins'));
     }
 
@@ -196,7 +202,7 @@ class AdminController extends Controller
         $admin = new App\admin;
         $admin->name = $request->name;
         $admin->email = $request->email;
-        $admin->password = $request->password;
+        $admin->password = Hash::make($request->password);
         $admin->role_id =$request->role;
         if($request->hasFile('avatar')){
             $file = $request->file('avatar');
@@ -224,7 +230,7 @@ class AdminController extends Controller
             $teacher->status= 1;
         }
         $teacher ->save();
-        return redirect('admin/teacher')->with('complete', 'Sửa thành công');
+        return redirect('admin/teacher')->with('success', 'Sửa thành công');
     }
     public function changeStudentStatus($id, $status)
     {
@@ -235,7 +241,7 @@ class AdminController extends Controller
             $student->status= 1;
         }
         $student ->save();
-        return redirect('admin/student')->with('complete', 'Sửa thành công');
+        return redirect('admin/student')->with('success', 'Sửa thành công');
     }
     public function changeAdminStatus($id, $status)
     {
@@ -246,7 +252,7 @@ class AdminController extends Controller
             $admin->status= 1;
         }
         $admin ->save();
-        return redirect('admin/adminAccount')->with('complete', 'Sửa thành công');
+        return redirect('admin/adminAccount')->with('success', 'Sửa thành công');
     }
     public function changeClassStatus($id, $status)
     {
@@ -257,7 +263,7 @@ class AdminController extends Controller
             $class->status= 1;
         }
         $class ->save();
-        return redirect('admin/class')->with('complete', 'Sửa thành công');
+        return redirect('admin/class')->with('success', 'Sửa thành công');
     }
     public function changeMajorsStatus($id, $status)
     {
@@ -268,7 +274,7 @@ class AdminController extends Controller
             $majors->status= 1;
         }
         $majors ->save();
-        return redirect('admin/majors')->with('complete', 'Sửa thành công');
+        return redirect('admin/majors')->with('success', 'Sửa thành công');
     }
 
 
@@ -333,7 +339,7 @@ class AdminController extends Controller
         }
         // $student->created_at = Carbon::now()->toDateTimeString();
         $student ->save();
-        return redirect('admin/student')->with('complete','Sửa thành công');
+        return redirect('admin/student')->with('success','Sửa thành công');
     }
 
     public function postEditTeacher(Request $request, $id)
@@ -368,7 +374,7 @@ class AdminController extends Controller
             $teacher->avatar = 'img/avatar/'.$nameAvatar;
         }
         $teacher ->save();
-        return redirect('admin/teacher')->with('complete','Sửa thành công');
+        return redirect('admin/teacher')->with('success','Sửa thành công');
     }
 
     public function postEditMajors(Request $request, $id)
@@ -383,7 +389,7 @@ class AdminController extends Controller
         $major->name = $request->name;
         $major->status = $request->status;
         $major->save();
-        return redirect('admin/majors')->with('complete','Sửa thành công');
+        return redirect('admin/majors')->with('success','Sửa thành công');
     }
 
     public function postEditAdmin(Request $request, $id)
@@ -398,8 +404,10 @@ class AdminController extends Controller
         $admin = App\admin::find($id);
         $admin->name = $request->name;
         $admin->email = $request->email;
-        $admin->password = $request->password;
         $admin->status = $request->status;
+        if($request->changepw ==1){
+            $admin->password = Hash::make($request->password);
+        }
         if($request->hasFile('avatar')){
             if($admin->avatar!=''){
                 Storage::disk('public')->delete($admin->avatar);
@@ -411,7 +419,7 @@ class AdminController extends Controller
         }
         $admin->role_id = $request->role;
         $admin->save();
-        return redirect('admin/adminAccount')->with('complete','Sửa thành cônng');
+        return redirect('admin/adminAccount')->with('success','Sửa thành công!');
     }
 
 
@@ -424,7 +432,7 @@ class AdminController extends Controller
 
             $teacher->subject()->detach();
             $teacher->delete();
-            return redirect('admin/teacher')->with('complete','Đã xóa thành công!');
+            return redirect('admin/teacher')->with('success','Đã xóa thành công!');
           
           } catch (\Exception $e) {
               return redirect('admin/teacher')->with('error',$e);
@@ -437,7 +445,7 @@ class AdminController extends Controller
         try {
             $student->cclass()->detach();
             $student->delete();
-            return redirect('admin/student')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/student')->with('success','Đã xóa thành công!');    
           } catch (\Exception $e) {
               return redirect('admin/student')->with('error',$e);
           }
@@ -447,7 +455,7 @@ class AdminController extends Controller
         $major = App\majors::find($id);
         try {
             $major->delete();
-            return redirect('admin/majors')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/majors')->with('success','Đã xóa thành công!');    
         }catch (\Exception $e) {
               return redirect('admin/majors')->with('error',$e);
         }
@@ -458,7 +466,7 @@ class AdminController extends Controller
         $class = App\cclass::find($id);
         try {
             $class->delete();
-            return redirect('admin/class')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/class')->with('success','Đã xóa thành công!');    
         }catch (\Exception $e) {
               return redirect('admin/class')->with('error',$e);
         }
@@ -469,7 +477,7 @@ class AdminController extends Controller
         $exam = App\exam::find($id);
         try {
             $exam->delete();
-            return redirect('admin/exam')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/exam')->with('success','Đã xóa thành công!');    
         }catch (\Exception $e) {
               return redirect('admin/exam')->with('error',$e);
         }
@@ -480,7 +488,7 @@ class AdminController extends Controller
         $feedback = App\feedback::find($id);
         try {
             $feedback->delete();
-            return redirect('admin/feedback')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/feedback')->with('success','Đã xóa thành công!');    
         }catch (\Exception $e) {
               return redirect('admin/feedback')->with('error',$e);
         }
@@ -491,13 +499,45 @@ class AdminController extends Controller
         $admin = App\admin::find($id);
         try {
             $admin->delete();
-            return redirect('admin/adminAccount')->with('complete','Đã xóa thành công!');    
+            return redirect('admin/adminAccount')->with('success','Đã xóa thành công!');    
           } catch (\Exception $e) {
               return redirect('admin/adminAccount')->with('error',$e);
           }
     }
 
-
-
+    // account manager
+    public function adAccountSetting()
+    {
+        $currAdmin = App\admin::find(Auth::guard('admin')->id());
+        return view('admin.adAccountSetting')->with('currAdmin',$currAdmin);
+    }
+    public function postAccountSetting(Request $request)
+    {
+        $this ->validate($request,[
+            'name' => 'required',
+            'email' => 'required',
+            'old-password' => 'min:6',
+            'password' => 'min:6|confirmed|different:old-password',
+            'avatar'=> 'image|mimes:jpeg,png,jpg,svg|max:5000', 
+        ]);
+        $currAccount = App\admin::find(Auth::guard('admin')->id());
+        $currAccount->name = $request ->name;
+        $currAccount->email = $request ->email;
+        if($request->hasFile('avatar')){
+            $file = $request->file('avatar');
+            $nameAvatar = $currAccount->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
+            $file->move('img/avatar',$nameAvatar);
+            $currAccount->avatar = 'img/avatar/'.$nameAvatar;
+        }else{
+            $currAccount->avatar = '/img/user.png';
+        }
+        if($request-> changepw ==1){
+            if(Hash::check($request->old-password , $currAccount->password)){
+                $currAccount-> password = Hash::make($request->password);
+            }
+        }
+        $currAccount->save();
+        return redirect('admin/')->with('success','Cập nhật tài khoản thành công!!');
+    }
 
 }

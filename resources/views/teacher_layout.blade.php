@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="{{asset('/tracnghiemtructuyen-favicon.png')}}" type="image/x-icon" />
-    <title>Trắc nghiệm trực tuyến || Admin side</title>
+    <title>Trắc nghiệm trực tuyến || Teacher side</title>
 
     <!-- bootstrap 4.5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -28,9 +28,9 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary-tc sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{URL::to('/admin')}}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{URL::to('')}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                 </div>
                 <div class="sidebar-brand-text mx-3">TRẮC NGHIỆM TRỰC TUYẾN.xyz</div>
@@ -39,8 +39,8 @@
             <hr class="sidebar-divider my-0">
 
 
-            <li class="nav-item @if (Request::path() == 'admin') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/')}}">
+            <li class="nav-item @if (Request::path() == 'teacher/') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher/')}}">
                     <i class="fa fa-home" aria-hidden="true"></i>
                     <span>Tổng quan</span></a>
             </li>
@@ -54,49 +54,31 @@
             </div>
 
             <!-- Nav Item - Pages  Menu -->
-            <li class="nav-item @if (Request::path() == 'admin/teacher') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/teacher')}}">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>Quản lý giảng viên</span></a>
-            </li>
 
-            <li class="nav-item @if (Request::path() == 'admin/student') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/student')}}">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Quản lý sinh viên</span></a>
-            </li>
-
-            <li class="nav-item @if (Request::path() == 'admin/class') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/class')}}">
+            <li class="nav-item @if (Request::path() == 'teacher/class') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher/class/')}}">
                     <i class="fas fa-users"></i>
-                    <span>Quản lý lớp học phần</span></a>
+                    <span>Lớp phụ trách</span></a>
             </li>
 
-            <li class="nav-item @if (Request::path() == 'admin/exam') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/exam')}}">
-                    <i class="fas fa-sticky-note"></i>
+            <li class="nav-item @if (Request::path() == 'teacher/exam') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher/exam/')}}">
+                    <i class="fas fa-users"></i>
                     <span>Quản lý bài kiểm tra</span></a>
             </li>
 
-
-            <li class="nav-item @if (Request::path() == 'admin/majors') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/majors')}}">
+            <li class="nav-item ">
+                <a class="nav-link" href="{{URL::to('/teacher/historyClass')}}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Quản lý chuyên ngành</span></a>
+                    <span>Lịch sử phụ trách</span></a>
             </li>
 
-            <li class="nav-item @if (Request::path() == 'admin/feedback') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/feedback')}}">
+            <li class="nav-item ">
+                <a class="nav-link" href="{{URL::to('')}}">
                     <i class="fas fa-comment-dots"></i>
                     <span>Phản hổi sinh viên</span></a>
             </li>
-
-            <li class="nav-item @if (Request::path() == 'admin/adminAccount') active  @endif">
-                <a class="nav-link" href="{{URL::to('/admin/adminAccount')}}">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Quản lý admin</span></a>
-            </li>
-
+           
             <!-- Divider -->
             {{-- <hr class="sidebar-divider d-none d-md-block"> --}}
 
@@ -124,24 +106,24 @@
                         </button>
                     </form>
                     <div class="ml-5 d-sm-inline-block form-inline">
-                        <h1>Trang quản trị viên </h1>
+                        <h1>Trang dành cho giảng viên </h1>
                     </div>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <!-- Nav Item - User Information -->
+                        <!-- Nav Item - User Infor -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-3 d-none d-lg-inline font-weight-bold text-gray-600 ">{{Auth::guard('admin')->user()->name}}</span>
-                                <img class="img-profile rounded-circle" src="@if (Auth::guard('admin')->user()->avatar != '') {{asset(Auth::guard('admin')->user()->avatar)}} @else {{asset('/img/user.png')}} @endif">
+                                <span class="mr-3 d-none d-lg-inline font-weight-bold text-gray-600 ">{{Auth::guard('teacher')->user()->name}}</span>
+                                <img class="img-profile rounded-circle" src="@if (Auth::guard('teacher')->user()->avatar != '') {{asset(Auth::guard('teacher')->user()->avatar)}} @else {{asset('/img/user.png')}} @endif">
                             </a>
-                            <!-- Dropdown - User Information -->
+                            <!-- User Inf -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{URL::to('admin/accountSetting')}}">
+                                <a class="dropdown-item" href="#">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Chỉnh sửa tài khoản
+                                    Cài đặt tài khoản
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#logoutModal">
@@ -159,7 +141,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     
-                    @yield('admin_content')
+                    @yield('teacher_content')
 
                 </div>
                 <!-- /.container-fluid -->
@@ -195,7 +177,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                    <a class="btn btn-primary" href="{{URL::to('/adminLogout')}}">Đăng xuất</a>
+                    <a class="btn btn-primary" href="{{URL::to('/teacherLogout')}}">Đăng xuất</a>
                 </div>
             </div>
         </div>

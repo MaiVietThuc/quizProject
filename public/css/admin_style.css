@@ -1193,6 +1193,11 @@ a:focus {
 	background-size: cover
 }
 
+.bg-gradient-primary-tc {
+	background-color: #242940;
+	background-size: cover
+}
+
 .text-gray-400 {
 	color: #d1d3e2!important
 }
@@ -1234,8 +1239,8 @@ a:focus {
 }
 
 .topbar .nav-item .nav-link .img-profile {
-	height: 2rem;
-	width: 2rem
+	height: 3rem;
+	width: 3rem
 }
 
 .topbar {
@@ -1440,6 +1445,9 @@ a:focus {
 
 .sidebar-dark .nav-item.active .nav-link i {
 	color: #fff
+}
+.sidebar .active .nav-link span {
+    font-size: 0.9rem;
 }
 
 .sidebar-dark #sidebarToggle {

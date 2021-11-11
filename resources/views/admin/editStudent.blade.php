@@ -12,7 +12,21 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800 pl-3">Sửa tài khoản sinh viên</h1>
+    @if(count($errors) > 0)
+    @foreach ($errors->all() as $err)
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{$err}}       
+        </div>
+    @endforeach
+    @endif
 
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{session('success')}}!
+        </div>
+    @endif
     <!-- mainform -->
     <form action="{{URL::to('admin/postEditStudent/'.$student->id.'')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf

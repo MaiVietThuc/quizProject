@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-login</title>
+    <title>Teacher-login</title>
     
     <!-- bootstrap 4.5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -22,11 +22,11 @@
                             <div class="auth-logo">
                                 <a href="index.html" class="logo logo-light text-center">
                                     <span class="logo-lg">
-                                        <img src="{{asset('img/admin.jpg')}}" alt="" height="150">
+                                        <img src="{{asset('img/teacher_icon.png')}}" alt="" height="150">
                                     </span>
                                 </a>
                             </div>                                 
-                            <p class="text-muted mb-4 mt-3">Đăng nhập dành cho admin</p>
+                            <p class="text-muted mb-4 mt-3">Đăng nhập dành cho giảng viên</p>';
                             @if (session('error'))
                                 <div class="alert alert-dannger alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -35,7 +35,7 @@
                             @endif
                         </div>
 
-                        <form action="{{URL::to('/postAdminLogin')}}" method="POST">
+                        <form action="{{URL::to('/postTeacherLogin')}}" method="POST">
                             @csrf                         
                             <div class="form-group mb-3">
                                 <label for="emailaddress">Tên tài khoản</label>

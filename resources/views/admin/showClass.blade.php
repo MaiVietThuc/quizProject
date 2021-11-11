@@ -13,10 +13,16 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-5 text-gray-800 pl-3">Quản lý lớp học phần</h1>
-    @if (Session('complete'))
+    @if (Session('success'))
         <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
-            {{session('complete')}}!
+            {{session('success')}}!
+        </div>
+    @endif
+    @if (Session('error'))
+        <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{session('error')}}!
         </div>
     @endif
 

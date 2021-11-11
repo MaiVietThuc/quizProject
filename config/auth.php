@@ -47,10 +47,14 @@ return [
             'hash' => false,
         ],
 
-        // admin
+        // custom
         'admin' => [
             'driver' => 'session',
             'provider' => 'admin',
+        ],
+        'teacher' => [
+            'driver' => 'session',
+            'provider' => 'teacher',
         ],
         'student' => [
             'driver' => 'session',
@@ -91,6 +95,11 @@ return [
             'model' => App\admin::class,
         ],
 
+        'teacher' => [
+            'driver' => 'eloquent',
+            'model' => App\teacher::class,
+        ],
+
         'student' => [
             'driver' => 'eloquent',
             'model' => App\student::class,
@@ -121,6 +130,11 @@ return [
         ],
         'admin' => [
             'provider' => 'admin',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+        'teacher' => [
+            'provider' => 'teacher',
             'table' => 'password_resets',
             'expire' => 60,
         ],

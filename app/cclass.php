@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class cclass extends Model
 {
     protected $table = "class";
+    protected $dates = ['date_open','date_close'];
 
     public function exam_class()
     {
@@ -35,6 +36,6 @@ class cclass extends Model
     
     public function exam()
     {
-        return $this->belongsToMany(exam::class,'exam_class','class_id','exam_id');
+        return $this->hasMany(exam::class,'class_id','id');
     }
 }
