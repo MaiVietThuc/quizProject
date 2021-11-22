@@ -27,8 +27,8 @@
 
     <!-- DataTales Example -->
     <div class="row card-box shadow  p-3 mb-1 ml-1 mr-1">
-        <div class="col-lg-8 col-12 ">
-            <h3 class="text-uppercase bg-light p-2 mt-0 mb-3">Thông tin lớp học:</h3>
+        {{-- <h3 class="text-uppercase bg-light p-2 mt-0 mb-3">Thông tin lớp học:</h3> --}}
+        <div class="col-lg-6 col-12 ">
             <table class="table">
                 <tr>
                     <td>Mã lớp</td>
@@ -43,15 +43,6 @@
                     <td>{{$classinf->student->count()}}</td>
                 </tr>
                 <tr>
-                    <td>Bài kiểm tra:</td>
-                    <td>
-                        Tổng:{{$classinf->exam->count()}} <br>
-                        Bài đã kiểm tra: {{$tested_exam}} <br>
-                        Bài chưa kiểm tra: {{$untested_exam}}<br>
-                        Bài kiểm tra thử: {{$exam_test}} 
-                    </td>
-                </tr>
-                <tr>
                     <td>Môn học:</td>
                     <td>{{$classinf->subject->subject_name}}</td>
                 </tr>
@@ -61,10 +52,25 @@
                        Từ: {{$classinf->date_open->format('d/m/Y')}} Đến: {{$classinf->date_close->format('d/m/Y')}}
                     </td>
                 </tr>
-    
             </table>
         </div>
-        <div class="col-lg-4 col-12"></div>
+        <div class="col-lg-6 col-12">
+            <table class="table">
+                <tr>
+                    <td>Bài kiểm tra:</td>
+                    <td>
+                        {{-- Tổng:{{$classinf->exam->count()}} <br> --}}
+                        @foreach ($classinf->exam as $ex)
+                            @if((\Carbon\Carbon::parse($ex->date_open)) > (\Carbon\Carbon::now()))
+                                {{$ex->title}}<span class="badge badge-secondary ml-2">Chưa kiểm tra</span><br>
+                            @else
+                                {{$ex->title}}<span class="badge badge-success ml-2">Đã kiểm tra</span><br>
+                            @endif
+                        @endforeach
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <hr>
     <div class="card shadow mb-4 p-2">

@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,7 +34,9 @@ Route::get('/teacherLogin',function(){
 Route::get('/teacherLogout','TeacherController@teacherLogout');
 Route::post('/postTeacherLogin', 'TeacherController@postTeacherLogin');
 
-
+    // student
+Route::post('/postStudentLogin', 'StudentController@postStudentLogin');
+Route::get('/studentLogout','StudentController@studentLogout');
 
 
 
@@ -127,5 +127,43 @@ Route::prefix('teacher')->middleware('teacher')->group(function () {
         Route::get('/deleteClassStudent/{class_id}/{student_id}','TeacherController@deleteStudentInClass');
     });
 
+    Route::prefix('historyClass')->group(function () {
+        Route::get('/','TeacherController@showHistoryClass');
+        
+    });
+
+    Route::prefix('exam')->group(function () {
+        Route::get('/','TeacherController@showTeacherExamAvalable');
+        Route::get('/history','TeacherController@showTeacherExamHistory');
+        Route::get('/changeStatus/{id}/on','TeacherController@turnOnExamStatus');
+        Route::get('/changeStatus/{id}/off','TeacherController@turnOffExamStatus');
+        // add exam 
+        Route::get('/addExam','TeacherController@getAddExam');
+        Route::post('/postAddExam','TeacherController@postAddExam');
+        Route::post('/postEditExam/{id}','TeacherController@postEditExam');
+        // manager exam
+        Route::get('/getManagerExam/{id}','TeacherController@getManagerExam');
+        Route::get('/deleteExam/{id}','TeacherController@deleteExam');
+
+        // post add question &answer exam
+        Route::post('/postAddQuestion/{id}','TeacherController@postAddQuestion');
+        Route::get('/getEditQuestion/{id}','TeacherController@getEditQuestion');
+        Route::post('/postEditQuestion/{id}','TeacherController@postEditQuestion');
+
+
+        Route::get('/deleteQuestion/{id}','TeacherController@deleteQuestion');
+    });
+
 });
 
+
+// route for student
+Route::prefix('student')->middleware('student')->group(function () {
+    Route::get('/','StudentController@getDashboard');
+    Route::get('/exam','StudentController@getExam');
+
+    Route::get('/historyExam','StudentController@historyExam');
+    Route::get('/class','StudentController@getClass');
+    Route::get('/historyClass','StudentController@historyClass');
+    Route::get('/doExam/{id}','StudentController@checkTimeToDoExam');
+});

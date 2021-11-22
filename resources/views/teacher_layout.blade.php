@@ -38,6 +38,8 @@
 
             <hr class="sidebar-divider my-0">
 
+            
+            <!-- Nav Item - Pages  Menu -->
 
             <li class="nav-item @if (Request::path() == 'teacher/') active  @endif">
                 <a class="nav-link" href="{{URL::to('/teacher/')}}">
@@ -48,12 +50,9 @@
 
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
             <div class="sidebar-heading">
-                Quản lý
+                Lớp
             </div>
-
-            <!-- Nav Item - Pages  Menu -->
 
             <li class="nav-item @if (Request::path() == 'teacher/class') active  @endif">
                 <a class="nav-link" href="{{URL::to('/teacher/class/')}}">
@@ -61,17 +60,31 @@
                     <span>Lớp phụ trách</span></a>
             </li>
 
+            <li class="nav-item @if (Request::path() == 'teacher/historyClass') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher/historyClass/')}}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Lịch sử phụ trách</span></a>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <div class="sidebar-heading">
+                Bài kiểm tra
+            </div>
+
             <li class="nav-item @if (Request::path() == 'teacher/exam') active  @endif">
                 <a class="nav-link" href="{{URL::to('/teacher/exam/')}}">
                     <i class="fas fa-users"></i>
                     <span>Quản lý bài kiểm tra</span></a>
             </li>
 
-            <li class="nav-item ">
-                <a class="nav-link" href="{{URL::to('/teacher/historyClass')}}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Lịch sử phụ trách</span></a>
+            <li class="nav-item @if (Request::path() == 'teacher/exam/history') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher/exam/history')}}">
+                    <i class="fas fa-users"></i>
+                    <span>Lịch sử & kết quả kiểm tra</span></a>
             </li>
+
+            <hr class="sidebar-divider d-none d-md-block">
 
             <li class="nav-item ">
                 <a class="nav-link" href="{{URL::to('')}}">
@@ -79,8 +92,21 @@
                     <span>Phản hổi sinh viên</span></a>
             </li>
            
+            {{-- <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Components</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar" style="">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
+                    </div>
+                </div>
+            </li> --}}
             <!-- Divider -->
-            {{-- <hr class="sidebar-divider d-none d-md-block"> --}}
+           
 
             <!-- Sidebar Toggler (Sidebar) -->
             {{-- <div class="text-center d-none d-md-inline">
@@ -167,7 +193,7 @@
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog mt-5" role="document">
+        <div class="modal-dialog-cus mt-5" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Bạn muốn đăng xuất?</h5>

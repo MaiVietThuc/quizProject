@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,5 +48,9 @@ class student extends Authenticatable
     public function cclass()
     {
         return $this->belongsToMany(cclass::class,'class_student','student_id','class_id');
+    }
+    public function exam()
+    {
+        return $this->belongsToMany(exam::class,'exam_student_status','student_id','exam_id')->withPivot('status');
     }
 }

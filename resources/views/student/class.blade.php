@@ -1,13 +1,13 @@
-@extends('teacher_layout')
+@extends('student_layout')
 
-@section('teacher_content')
+@section('student_content')
     
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent">
-            <li class="breadcrumb-item"><a href="/teacher/"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <li class="breadcrumb-item"><a href="/student/"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Lớp phụ trách</li>
+            <li class="breadcrumb-item active" aria-current="page">Lớp đang học</li>
         </ol>
     </nav>
 
@@ -28,7 +28,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách lớp phụ trách</h5>
+            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách lớp học</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -47,7 +47,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teachClass as $tc)
+                        @foreach ($class as $tc)
                             <tr>
                                 <td>CLS-{{$tc->id}}</td>                               
                                 <td>{{$tc->class_name}}</td>                  
@@ -61,15 +61,15 @@
                                      đến: <strong>{{$tc->date_close->format('d/m/Y') }}</strong> 
                                 </td>
                                 <td class="text-center">
-                                    @if(\Carbon\Carbon::parse($tc->date_open) > ($now))
-                                        <span class="badge badge-secondary">Đang chờ</span> 
+                                    @if(\Carbon\Carbon::parse($tc->date_open) > \Carbon\Carbon::now())
+                                        <span class="badge badge-secondary">Chuẩn bị</span> 
                                     @else
                                         <span class="badge badge-primary">Đang học</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('/teacher/class/manager/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('/student/class/manager/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>

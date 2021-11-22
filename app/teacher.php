@@ -33,7 +33,7 @@ class teacher extends Authenticatable
     }
     public function exam()
     {
-        return $this -> hasMany('App\exam','teacher_id','id');
+        return $this -> hasManyThrough('App\exam','App\cclass','teacher_id','class_id','id');
     }
     public function subject()
     {

@@ -7,7 +7,7 @@
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item"><a href="/teacher/"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Lớp phụ trách</li>
+            <li class="breadcrumb-item active" aria-current="page">Bài kiểm tra</li>
         </ol>
     </nav>
 
@@ -28,7 +28,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách lớp phụ trách</h5>
+            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách bài kiểm tra</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,40 +36,50 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID lớp</th>
-                            <th>Tên lớp</th>
-                            <th>Môn học</th>
-                            <th>Sĩ số</th>
-                            <th>Bài kiểm tra</th>
-                            <th>Thời gian</th>
+                            <th>Số thứ tự</th>
+                            <th>Tên bài kiểm tra</th>
+                            <th>Thời gian làm bài</th>
+                            <th>Lớp</th>
+                            <th>Tổng số câu hỏi</th>
+                            <th>Loại</th>
+                            <th>Thời gian mở/đóng</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teachClass as $tc)
-                            <tr>
-                                <td>CLS-{{$tc->id}}</td>                               
-                                <td>{{$tc->class_name}}</td>                  
-                                <td>{{$tc->subject->subject_name}}</td>
-                                <td>{{$tc->class_student->count()}}</td>
+                        @foreach ($exams as $ex)
+                            <tr>            
+                                <td>{{$loop->index}}</td>                   
+                                <td>{{$ex->title}}</td>                  
+                                <td>{{$ex->duration}} Phút</td>
+                                <td>{{$ex->cclass->class_name}}</td>
                                 <td>
-                                    Tổng: <strong>{{$tc->exam->count()}}</strong>
+                                    @if ($ex->total_question =='')
+                                    0
+                                    @else
+                                    {{$ex->total_question}}
+                                    @endif
                                 </td>
+                                <td>{{$ex->type}}</td>
                                 <td>
-                                    Từ: <strong>{{$tc->date_open->format('d/m/Y') }}</strong> <br>
-                                     đến: <strong>{{$tc->date_close->format('d/m/Y') }}</strong> 
+                                    @if ($ex->type == 'exam')
+                                        Từ: <strong>{{$ex->time_open->format('H:i d/m/Y') }}</strong> <br>
+                                        đến: <strong>{{$ex->time_close->format('H:i d/m/Y') }}</strong>                                       
+                                    @else
+                                        Không
+                                    @endif
                                 </td>
                                 <td class="text-center">
-                                    @if(\Carbon\Carbon::parse($tc->date_open) > ($now))
-                                        <span class="badge badge-secondary">Đang chờ</span> 
+                                    @if ($ex->type == 'exam')
+                                        <span class="badge badge-secondary">Đã Kết Thúc</span>                                       
                                     @else
-                                        <span class="badge badge-primary">Đang học</span>
+                                    <span class="badge badge-primary">Khả dụng</span>  
                                     @endif
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('/teacher/class/manager/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('/teacher/class/manager/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>

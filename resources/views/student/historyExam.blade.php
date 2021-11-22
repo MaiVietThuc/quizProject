@@ -1,13 +1,13 @@
-@extends('teacher_layout')
+@extends('student_layout')
 
-@section('teacher_content')
+@section('student_content')
     
     <!-- breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent">
-            <li class="breadcrumb-item"><a href="/teacher/"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <li class="breadcrumb-item"><a href="/student/"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Lớp phụ trách</li>
+            <li class="breadcrumb-item active" aria-current="page">Lịch sử kiểm tra</li>
         </ol>
     </nav>
 
@@ -28,7 +28,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách lớp phụ trách</h5>
+            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,40 +36,47 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID lớp</th>
-                            <th>Tên lớp</th>
-                            <th>Môn học</th>
-                            <th>Sĩ số</th>
-                            <th>Bài kiểm tra</th>
+                            <th>STT</th>
+                            <th>Tên bài kiểm tra</th>
                             <th>Thời gian</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th>Lớp</th>
+                            <th>Tổng số câu hỏi</th>
+                            <th>Điểm tối đa</th>
+                            <th>Loại</th>
+                            <th>Ngày kiểm tra</th>
+                            <th>Kết quả</th>
+                            <th>Chi tiết</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teachClass as $tc)
-                            <tr>
-                                <td>CLS-{{$tc->id}}</td>                               
-                                <td>{{$tc->class_name}}</td>                  
-                                <td>{{$tc->subject->subject_name}}</td>
-                                <td>{{$tc->class_student->count()}}</td>
+                        @foreach ($exams as $ex)
+                            <tr>     
+                                <td>{{$loop->index}}</td>               
+                                <td>{{$ex->title}}</td>                  
+                                <td>{{$ex->duration}} Phút</td>
+                                <td>{{$ex->cclass->class_name}}</td>
+                                <td>{{$ex->total_question}}</td>
+                                <td>{{$ex->total_marks}}</td>
                                 <td>
-                                    Tổng: <strong>{{$tc->exam->count()}}</strong>
-                                </td>
-                                <td>
-                                    Từ: <strong>{{$tc->date_open->format('d/m/Y') }}</strong> <br>
-                                     đến: <strong>{{$tc->date_close->format('d/m/Y') }}</strong> 
-                                </td>
-                                <td class="text-center">
-                                    @if(\Carbon\Carbon::parse($tc->date_open) > ($now))
-                                        <span class="badge badge-secondary">Đang chờ</span> 
+                                    @if ($ex->type =='exam')
+                                        Kiểm tra tính điểm
                                     @else
-                                        <span class="badge badge-primary">Đang học</span>
+                                        Kiểm tra thử
+                                    @endif
+
+                                </td>
+                                <td>
+                                    @if ($ex->type == 'exam')
+                                        Từ: <strong>{{$ex->time_open->format('H:i d/m/Y') }}</strong> <br>
+                                        đến: <strong>{{$ex->time_close->format('H:i d/m/Y') }}</strong>                                       
+                                    @else
+                                        Không
                                     @endif
                                 </td>
+                                <td>d</td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('/teacher/class/manager/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('student/exam/getManagerExam/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -92,7 +99,7 @@
                     searchPlaceholder: "Tìm kiếm..."
                 },
                 "columnDefs": [ {
-                "targets": [7],
+                "targets": [9],
                 "orderable": false
                 } ]
             });

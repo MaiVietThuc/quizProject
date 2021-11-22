@@ -835,20 +835,20 @@ button.close {
 	outline: 0
 }
 
-.modal-dialog {
+.modal-dialog-cus {
 	position: relative;
 	width: auto;
 	margin: .5rem;
 	pointer-events: none
 }
 
-.modal.fade .modal-dialog {
+.modal.fade .modal-dialog-cus {
 	transition: transform .3s ease-out;
 	transform: translate(0, -50px)
 }
 
 @media (prefers-reduced-motion:reduce) {
-	.modal.fade .modal-dialog {
+	.modal.fade .modal-dialog-cus {
 		transition: none
 	}
 }
@@ -908,7 +908,7 @@ button.close {
 }
 
 @media (min-width:576px) {
-	.modal-dialog {
+	.modal-dialog-cus {
 		max-width: 500px;
 		margin: 1.75rem auto
 	}
@@ -1198,6 +1198,11 @@ a:focus {
 	background-size: cover
 }
 
+.bg-gradient-primary-st {
+	background-color: #10766d;
+	background-size: cover
+}
+
 .text-gray-400 {
 	color: #d1d3e2!important
 }
@@ -1380,9 +1385,70 @@ a:focus {
 	font-size: .65rem
 }
 
+
+.sidebar .nav-item .collapse .collapse-inner {
+	border-radius: .35rem;
+	box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15)
+}
+
+.sidebar .nav-item .collapse .collapse-inner {
+	padding: .5rem 0;
+	min-width: 10rem;
+	font-size: .85rem;
+	margin: 0 0 1rem 0
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-header {
+	margin: 0;
+	white-space: nowrap;
+	padding: .5rem 1.5rem;
+	text-transform: uppercase;
+	font-weight: 800;
+	font-size: .65rem;
+	color: #b7b9cc
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item {
+	padding: .5rem 1rem;
+	margin: 0 .5rem;
+	display: block;
+	color: #3a3b45;
+	text-decoration: none;
+	border-radius: .35rem;
+	white-space: nowrap
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item:hover {
+	background-color: #eaecf4
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item:active {
+	background-color: #dddfeb
+}
+
 @media (min-width:768px) {
 	.sidebar {
 		width: 14rem!important
+	}
+	.sidebar .nav-item .collapse {
+		position: relative;
+		left: 0;
+		z-index: 1;
+		top: 0;
+		-webkit-animation: none;
+		animation: none
+	}
+	.sidebar .nav-item .collapse .collapse-inner {
+		border-radius: 0;
+		box-shadow: none
+	}
+	.sidebar .nav-item .collapsing {
+		display: block;
+		transition: height 0.15s ease;
+	  }
+	.sidebar .nav-item .collapse,
+	.sidebar .nav-item .collapsing {
+		margin: 0 1rem
 	}
 	.sidebar .nav-item .nav-link {
 		display: block;
@@ -1500,4 +1566,28 @@ footer.sticky-footer .copyright {
     top: 5vh;
     left: 20%;
     z-index: 99;
+}
+.collapsing {
+	position: relative;
+	height: 0;
+	overflow: hidden;
+	transition: height 0.15s ease;
+  }
+
+@media (min-width:768px) {
+	.question-scroll-container{
+		height: 61vh;
+		overflow-y: scroll;
+	}
+}
+
+.home-wrap{
+	min-height: 100vh;
+	background-image: url('../img/homewallpaper.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.height-100vh{
+	height: 100vh;
 }
