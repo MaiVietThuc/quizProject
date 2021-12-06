@@ -65,7 +65,7 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="A" name="correct_answer" 
+                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_1" name="correct_answer" 
                                     @if ($question->ans_1 == $question->corr_ans)  checked  @endif > 
                                 </td>
                             </tr>
@@ -78,7 +78,7 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="B" name="correct_answer"
+                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_2" name="correct_answer"
                                     @if ($question->ans_2 == $question->corr_ans)  checked  @endif > 
                                 </td>
                             </tr>
@@ -91,7 +91,7 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="C" name="correct_answer" 
+                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_3" name="correct_answer" 
                                     @if ($question->ans_3 == $question->corr_ans)  checked  @endif > 
                                 </td>
                             </tr>
@@ -104,14 +104,14 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="D" name="correct_answer" 
+                                    <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_4" name="correct_answer" 
                                     @if ($question->ans_4 == $question->corr_ans)  checked  @endif > 
                                 </td>
                             </tr>
                         </table>
 
                         <label for="mark">Điểm:</label>
-                        <input type="number" step="0.05" name="mark" id="mark" value="1" placeholder="Điểm cho đáp án đúng">
+                        <input type="number" step="0.05" name="mark" id="mark" value="{{$question->mark}}" placeholder="Điểm cho đáp án đúng">
                     </div>
                     
                 </div>

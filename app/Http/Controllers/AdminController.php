@@ -70,8 +70,14 @@ class AdminController extends Controller
     }
     public function getExam()
     {
-        $exams = App\exam::with(['cclass'])->get();
-        return view('admin.showExam',compact('exams'));
+        $exams = App\exam::all();
+        // return view('admin.showExam',compact('exams'));
+        foreach ($exams as $ex) {
+            print_r($ex);
+            // foreach($ex->cclass as $x){
+            //     print_r($x->class_name);
+            // }
+        }
     }
     public function getMajors()
     {

@@ -144,7 +144,7 @@ class TeacherController extends Controller
     public function postEditExam(Request $request, $id)
     {
         $this -> validate($request,[
-            'name' => 'required|unique:exam,title|string|min:2|max:200',
+            'name' => 'required|string|min:2|max:200',
             'duration' => 'required',
             'type' => 'required',
             'status' => 'required',
@@ -152,13 +152,16 @@ class TeacherController extends Controller
         $exam = App\exam::find($id);
         $exam->title = $request->name;
         $exam->duration = $request->duration;
-        $time_open = str_replace('T',' ',$request->time_open);
-        $exam->time_open = $time_open;
-        $time_close = Carbon::parse($time_open)->addMinutes($request->duration)->format('Y/m/d H:i:s');
-        $exam->time_close = $time_close;
+        if($request->type == "exam")
+        {
+            $time_open = str_replace('T',' ',$request->time_open);
+            $exam->time_open = $time_open;
+            $time_close = Carbon::parse($time_open)->addMinutes($request->duration)->format('Y/m/d H:i:s');
+            $exam->time_close = $time_close;
+        }
         $exam->status = $request->status;
         $exam->type = $request->type;
-        $exam->save();
+        $exam->update();
         return redirect()->back()->with('success','Sửa thành công');
     }
 
@@ -202,31 +205,14 @@ class TeacherController extends Controller
             $file->move('img/ques',$nameimg);
             $question->question_img = 'img/ques/'.$nameimg;
         }
-        switch($request->correct_answer)
-        {
-            case 'A':
-                $question->corr_ans = $request->answer_A;
-                // echo 'a';
-                break;
-            case 'B':
-                $question->corr_ans = $request->answer_B;
-                // echo 'b';
-                break;
-            case 'C':
-                $question->corr_ans = $request->answer_C;
-                // echo 'c';
-                break;
-            case 'D':
-                $question->corr_ans = $request->answer_D;
-                // echo 'd';
-                break;
-        }
+        $question->corr_ans = $request->correct_answer;
         $question->save();
         // update ttmark
-        $ttmark = App\question::where('exam_id',$id)->sum('mark');
-        App\exam::where('id',$id)->update(['total_marks'=>$ttmark]);
+        $ttmark = App\question::where('exam_id',$question->exam_id)->sum('mark');
+        $ttquestion = App\question::where('exam_id',$question->exam_id)->count();
+        App\exam::where('id',$question->exam_id)->update(['total_marks'=>$ttmark,'total_question'=>$ttquestion]);
 
-        return redirect('teacher/exam/getManagerExam/'.$id.'')->with('success','Thêm thành công!');
+        return redirect('teacher/exam/getManagerExam/'.$question->exam_id.'')->with('success','Thêm thành công!');
     }
 
     public function deleteQuestion($id)
@@ -235,7 +221,8 @@ class TeacherController extends Controller
         $question->delete();
         // update ttmark
         $ttmark = App\question::where('exam_id',$question->exam_id)->sum('mark');
-        App\exam::where('id',$question->exam_id)->update(['total_marks'=>$ttmark]);
+        $ttquestion = App\question::where('exam_id',$question->exam_id)->count();
+        App\exam::where('id',$question->exam_id)->update(['total_marks'=>$ttmark,'total_question'=>$ttquestion]);
         return redirect()->back()->with('success','Xóa thành công!');
     }
 
@@ -269,30 +256,14 @@ class TeacherController extends Controller
             $file->move('img/ques',$nameimg);
             $question->question_img = 'img/ques/'.$nameimg;
         }
-        switch($request->correct_answer)
-        {
-            case 'A':
-                $question->corr_ans = $request->answer_A;
-                // echo 'a';
-                break;
-            case 'B':
-                $question->corr_ans = $request->answer_B;
-                // echo 'b';
-                break;
-            case 'C':
-                $question->corr_ans = $request->answer_C;
-                // echo 'c';
-                break;
-            case 'D':
-                $question->corr_ans = $request->answer_D;
-                // echo 'd';
-                break;
-        }
+        $question->corr_ans = $request->correct_answer;
         $question->save();
         // update ttmark
-        $ttmark = App\question::where('exam_id',$id)->sum('mark');
-        App\exam::where('id',$id)->update(['total_marks'=>$ttmark]);
-        return redirect('teacher/exam/getManagerExam/'.$id.'')->with('success','Sửa thành công!');
+        $ttmark = App\question::where('exam_id',$question->exam_id)->sum('mark');
+        $ttquestion = App\question::where('exam_id',$question->exam_id)->count();
+        App\exam::where('id',$question->exam_id)->update(['total_marks'=>$ttmark,'total_question'=>$ttquestion]);
+
+        return redirect('teacher/exam/getManagerExam/'.$question->exam_id.'')->with('success','Sửa thành công!');
     }
     
 }

@@ -18,6 +18,16 @@ class student
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        if(Auth::guard('student')->check())
+        {
+            $admin = Auth::guard('student')->user();
+            if($admin->status == 1){
+                return $next($request);
+            }else{
+                return Redirect::back()->with('error', 'Lỗi tài khoản!! Tài khoản đã bị vô hiệu hóa!'); 
+            }
+        }else{
+            return redirect('/studentLogin')->with('error','Chưa đăng nhập!!');
+        }
     }
 }

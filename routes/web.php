@@ -35,6 +35,9 @@ Route::get('/teacherLogout','TeacherController@teacherLogout');
 Route::post('/postTeacherLogin', 'TeacherController@postTeacherLogin');
 
     // student
+Route::get('/studentLogin',function(){ 
+    return view('student.studentLogin');
+});
 Route::post('/postStudentLogin', 'StudentController@postStudentLogin');
 Route::get('/studentLogout','StudentController@studentLogout');
 
@@ -164,6 +167,29 @@ Route::prefix('student')->middleware('student')->group(function () {
 
     Route::get('/historyExam','StudentController@historyExam');
     Route::get('/class','StudentController@getClass');
+    Route::get('/viewClass/{id}','StudentController@getViewClass');
+
     Route::get('/historyClass','StudentController@historyClass');
     Route::get('/doExam/{id}','StudentController@checkTimeToDoExam');
+    Route::get('/feedback','StudentController@getFeedback');
+
+    Route::post('/submitExam/{id}','StudentController@postSubmitExam');
+
+    Route::get('/resultDetal/{id}','StudentController@resultDetail');
+    Route::get('/accSetting','StudentController@accSetting');
+    Route::post('/postExamFeedback','StudentController@postExamFeedback');
+
+    
+
+
 });
+// test
+Route::get('/check','StudentController@check');
+
+
+// forgetPassword
+Route::get('/studentForgetPassword',function(){
+    return view('student.forgetPassword');
+});
+Route::post('/postStudentFP','StudentController@postStudentFP');
+Route::get('/resetpwEmailConfirmStu/{id}/{token}','StudentController@resetpwEmailConfirmStu');

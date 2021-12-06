@@ -39,7 +39,8 @@ html {
 	font-family: sans-serif;
 	line-height: 1.15;
 	-webkit-text-size-adjust: 100%;
-	-webkit-tap-highlight-color: transparent
+	-webkit-tap-highlight-color: transparent;
+	scroll-behavior: smooth
 }
 
 footer,
@@ -1590,4 +1591,21 @@ footer.sticky-footer .copyright {
 
 .height-100vh{
 	height: 100vh;
+}
+
+.pagination-question{
+	width: 35px;
+	height: 35px;
+	display: inline-block;
+	text-align: center;
+	padding: auto;
+	line-height: 35px;
+	border: 1px solid grey;
+}
+
+.question-answer ul li label{
+	width:95%;
+}
+.bt-login{
+	width:20%;
 }

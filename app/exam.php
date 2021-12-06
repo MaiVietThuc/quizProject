@@ -20,6 +20,6 @@ class exam extends Model
     }
     public function cclass()
     {
-        return $this->belongsTo(cclass::class,'class_id','id');
+        return $this -> belongsTo('App\cclass','class_id','id');
     }
 }

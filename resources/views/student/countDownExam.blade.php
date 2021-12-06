@@ -102,6 +102,9 @@
                 minute.innerHTML = mDisplay;
                 second.innerHTML = sDisplay;
                 time = time - 1;
+                if(time<=10){
+                    location.reload();
+                }
             };
         
     </script>

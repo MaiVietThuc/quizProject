@@ -69,7 +69,7 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('/student/class/manager/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('/student/viewClass/'.$tc->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>

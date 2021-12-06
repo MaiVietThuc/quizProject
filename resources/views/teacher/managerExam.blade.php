@@ -130,22 +130,26 @@
                                    @endif
                                 
                                    <span class="pl-3 
-                                        @if ($qu->ans_1 == $qu->corr_ans)
+                                        @if ($qu->corr_ans == 'ans_1')
                                         text-success font-weight-bold
                                         @endif">A. {{ Str::limit($qu->ans_1, 90)}}
                                     </span><br>
                                    <span class="pl-3 
-                                    @if ($qu->ans_2 == $qu->corr_ans)
+                                    @if ($qu->corr_ans == 'ans_2')
                                         text-success font-weight-bold
                                         @endif"> B. {{ Str::limit($qu->ans_2, 90)}}</span><br>
+                                   @if($qu->ans_3 !='')
+                                   <span class="pl-3
+                                        @if ($qu->corr_ans == 'ans_3')
+                                            text-success font-weight-bold
+                                            @endif">C. {{ Str::limit($qu->ans_3, 90)}}</span><br>
+                                    @endif
+                                    @if($qu->ans_4 !='')
                                    <span class="pl-3 
-                                    @if ($qu->ans_3 == $qu->corr_ans)
-                                        text-success font-weight-bold
-                                        @endif">C. {{ Str::limit($qu->ans_3, 90)}}</span><br>
-                                   <span class="pl-3 
-                                    @if ($qu->ans_4 == $qu->corr_ans)
+                                    @if ($qu->corr_ans == 'ans_4')
                                         text-success font-weight-bold
                                         @endif">D. {{ Str::limit($qu->ans_4, 90)}}</span><br>
+                                    @endif
                                 </td>
                                 <td class="text-center align-middle" width="20%">
                                     <a href="{{URL::to('teacher/exam/getEditQuestion/'.$qu->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
@@ -203,7 +207,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="A" name="correct_answer" checked> 
+                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_1" name="correct_answer" checked> 
                                     </td>
                                 </tr>
 
@@ -215,7 +219,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="B" name="correct_answer"> 
+                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_2" name="correct_answer"> 
                                     </td>
                                 </tr>
 
@@ -227,7 +231,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="C" name="correct_answer" > 
+                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_3" name="correct_answer" > 
                                     </td>
                                 </tr>
                                 
@@ -239,7 +243,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="D" name="correct_answer"> 
+                                        <input type="radio" style="width: 2rem" class="form-control-lg" id="correct-answer" value="ans_4" name="correct_answer"> 
                                     </td>
                                 </tr>
                             </table>

@@ -37,28 +37,22 @@
                     <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Tên bài kiểm tra</th>
+                            <th>Tên bài kiểm tra</th> 
                             <th>Thời gian</th>
-                            <th>Lớp</th>
-                            <th>Tổng số câu hỏi</th>
-                            <th>Điểm tối đa</th>
                             <th>Loại</th>
                             <th>Ngày kiểm tra</th>
                             <th>Kết quả</th>
-                            <th>Chi tiết</th>
+                            <th>Xem chi tiết</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($exams as $ex)
                             <tr>     
                                 <td>{{$loop->index}}</td>               
-                                <td>{{$ex->title}}</td>                  
-                                <td>{{$ex->duration}} Phút</td>
-                                <td>{{$ex->cclass->class_name}}</td>
-                                <td>{{$ex->total_question}}</td>
-                                <td>{{$ex->total_marks}}</td>
+                                <td>{{$ex->exam->title}}</td>
+                                <td>{{$ex->exam->duration}} Phút</td>
                                 <td>
-                                    @if ($ex->type =='exam')
+                                    @if ($ex->exam->type =='exam')
                                         Kiểm tra tính điểm
                                     @else
                                         Kiểm tra thử
@@ -66,17 +60,17 @@
 
                                 </td>
                                 <td>
-                                    @if ($ex->type == 'exam')
-                                        Từ: <strong>{{$ex->time_open->format('H:i d/m/Y') }}</strong> <br>
-                                        đến: <strong>{{$ex->time_close->format('H:i d/m/Y') }}</strong>                                       
+                                    @if ($ex->exam->type == 'exam')
+                                        Từ: <strong>{{$ex->exam->time_open->format('H:i d/m/Y') }}</strong> <br>
+                                        đến: <strong>{{$ex->exam->time_close->format('H:i d/m/Y') }}</strong>                                       
                                     @else
-                                        Không
+                                        <strong>{{$ex->time_start->format('d/m/Y')}}</strong>
                                     @endif
                                 </td>
-                                <td>d</td>
+                                <td>{{$ex->mark}}/{{$ex->exam->total_marks}} điểm</td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('student/exam/getManagerExam/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('student/resultDetal/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -99,7 +93,7 @@
                     searchPlaceholder: "Tìm kiếm..."
                 },
                 "columnDefs": [ {
-                "targets": [9],
+                "targets": [6],
                 "orderable": false
                 } ]
             });

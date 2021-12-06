@@ -88,8 +88,8 @@
 
             <hr class="sidebar-divider d-none d-md-block">
 
-            <li class="nav-item ">
-                <a class="nav-link" href="{{URL::to('')}}">
+            <li class="nav-item @if (Request::path() == 'student/feedback') active  @endif">
+                <a class="nav-link" href="{{URL::to('/student/feedback')}}">
                     <i class="fas fa-comment-dots"></i>
                     <span>Phản hổi của bạn</span></a>
             </li>
@@ -124,7 +124,7 @@
                             <!-- User Inf -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{URL::to('student/accSetting')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cài đặt tài khoản
                                 </a>
