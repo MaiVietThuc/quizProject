@@ -8,6 +8,7 @@ use App;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use DB;
 
 class TeacherController extends Controller
 {
@@ -266,4 +267,24 @@ class TeacherController extends Controller
         return redirect('teacher/exam/getManagerExam/'.$question->exam_id.'')->with('success','Sửa thành công!');
     }
     
+    public function showFeedback()
+    {
+        $feedbackId = DB::table('class')->join('exam','class.id','=','exam.class_id')
+        ->join('exam_feedback','exam.id','=','exam_feedback.exam_id')
+        ->select('exam_feedback.id')->where('class.teacher_id','=',Auth::guard('teacher')->id())
+        ->get();
+        $FbId = array();
+        foreach($feedbackId as $fb)
+        {
+            $FbId[] = $fb->id ;
+        }
+        $feedback = App\exam_feedback::whereIn('id',$FbId)->with('exam')->with('student')->get();
+        return view('teacher.examFeedback')->with('feedback',$feedback);
+    }
+    public function repFeedback($id)
+    {
+        $feedback = App\exam_feedback::find($id)->with('exam')->with('student')->get();
+        // print_r($feedback);
+        return view('teacher.repFeedback')->with('feedback',$feedback);  
+    }
 }

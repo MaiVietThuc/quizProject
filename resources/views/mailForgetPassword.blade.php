@@ -16,9 +16,11 @@
     <div class="row text-center">
         <div class="col">
             <h1>Đặt lại mật khẩu</h1>
-            <p>Chào {{$student_name}}.Có phải bạn vừa khôi phục lại mật khẩu tại <strong>tracnghiemtructuyen</strong></p>
+            <p class="mb-3">Chào {{$student_name}}.Có phải bạn vừa khôi phục lại mật khẩu tại <strong>tracnghiemtructuyen</strong></p>
             <p>Chọn vào đường dẫn bên dưới để đặt lại mật khẩu</p>
-            <a href="{{"http://localhost:8080/quizProject/public/resetpwEmailConfirmStu/"$student_id."/".$token}}" class="mb-5">Click here</a>
+            <a href="{{"http://localhost:8080/quizProject/public/resetpwEmailConfirmStu/".$student_id."/".$token.""}}" class="mb-5">Click here</a>
+            <p class="mb-3 mt-5">Nếu bạn không yêu cầu thay đổi mật khẩu, hãy liên hệ quản trị viên để được hỗ trợ!</p>
+            <p class="font-weight-light">Đường dây nóng: <a href="tel:1800100x">1800100x</a> </p>
         </div>
         
     </div>

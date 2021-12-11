@@ -212,6 +212,8 @@ class StudentController extends Controller
         return view('mailForgetPassword');
     }
 
+
+
     // forgetPassword
     public function postStudentFP(Request $request)
     {
@@ -228,11 +230,11 @@ class StudentController extends Controller
         $student->remember_token = Str::random(60);
         $student->save();
 
-        Mail::send('mailForgetPassword', ['token'=>$student->remenber_token,'student_name'=>$student->name,'student_id'=>$student->id], function ($message)use($request) {
+        Mail::send('mailForgetPassword', ['token'=>$student->remember_token,'student_name'=>$student->name,'student_id'=>$student->id], function ($message)use($request) {
             $message->to($request->email);
             $message->subject('Đặt lại mật khẩu');
         });
-        return redirect()->back()->with('success','đã gửi!');
+        return redirect()->back()->with('success','Vui lòng kiểm tra email để đổi mật khẩu!');
     }
 
     public function resetpwEmailConfirmStu($id, $token)
@@ -242,6 +244,23 @@ class StudentController extends Controller
         {
             return abort(404,'Page not found');
         }
-        
+        return view('newPassword')->with('id',$id)->with('token',$token);
+    }
+    public function pNewPassword(Request $request)
+    {
+        $this->validate($request,[
+            'id' => 'required',
+            'token' => 'required',
+            'password' => 'min:6|confirmed'
+        ]);
+        $student = App\student::where('id',$request->id)->where('remember_token',$request->token)->first();
+        if(!$student)
+        {
+            return abort(404,'Page not found');
+        }
+        $student-> password = Hash::make($request->password);
+        $student->remember_token = '';
+        $student->save();
+        return redirect('/studentLogin')->with('success','Thay đổi thành công!');
     }
 }

@@ -87,7 +87,7 @@
             <hr class="sidebar-divider d-none d-md-block">
 
             <li class="nav-item ">
-                <a class="nav-link" href="{{URL::to('')}}">
+                <a class="nav-link" href="{{URL::to('/teacher/feedback')}}">
                     <i class="fas fa-comment-dots"></i>
                     <span>Phản hổi sinh viên</span></a>
             </li>

@@ -157,6 +157,11 @@ Route::prefix('teacher')->middleware('teacher')->group(function () {
         Route::get('/deleteQuestion/{id}','TeacherController@deleteQuestion');
     });
 
+    Route::prefix('feedback')->group(function () {
+        Route::get('/','TeacherController@showFeedback');
+        Route::get('/repFeedback/{id}','TeacherController@repFeedback');
+    });
+
 });
 
 
@@ -193,3 +198,4 @@ Route::get('/studentForgetPassword',function(){
 });
 Route::post('/postStudentFP','StudentController@postStudentFP');
 Route::get('/resetpwEmailConfirmStu/{id}/{token}','StudentController@resetpwEmailConfirmStu');
+Route::post('/pNewPassword','StudentController@pNewPassword');

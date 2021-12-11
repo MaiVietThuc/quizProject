@@ -26,6 +26,12 @@
                                     {{session('error')}}!
                                 </div>
                             @endif
+                            @if (session('success'))
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                {{session('success')}}!
+                            </div>
+                            @endif
                         </div>
 
                         <form action="{{URL::to('/postStudentLogin')}}" method="POST">
