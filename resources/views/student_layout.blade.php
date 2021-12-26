@@ -56,13 +56,13 @@
 
             <li class="nav-item @if (Request::path() == 'student/exam') active  @endif">
                 <a class="nav-link" href="{{URL::to('/student/exam/')}}">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-fw fa-table"></i>
                     <span>Làm bài kiểm tra</span></a>
             </li>
 
             <li class="nav-item @if (Request::is('student/historyExam*') ) active  @endif">
                 <a class="nav-link" href="{{URL::to('/student/historyExam')}}">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-fw fa-table"></i>
                     <span>Lịch sử & kết quả kiểm tra</span></a>
             </li>
 
@@ -76,14 +76,14 @@
             <li class="nav-item @if (Request::path() == 'student/class') active  @endif">
                 <a class="nav-link" href="{{URL::to('/student/class/')}}">
                     <i class="fas fa-users"></i>
-                    <span>Lớp đang học</span></a>
+                    <span>Lớp học</span></a>
             </li>
 
-            <li class="nav-item @if (Request::path() == 'student/historyClass') active  @endif">
+            {{-- <li class="nav-item @if (Request::path() == 'student/historyClass') active  @endif">
                 <a class="nav-link" href="{{URL::to('/student/historyClass/')}}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Lớp đã học</span></a>
-            </li>
+            </li> --}}
 
 
             <hr class="sidebar-divider d-none d-md-block">
@@ -169,12 +169,12 @@
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog-cus mt-5" role="document">
+        <div class="modal-dialog mt-5" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Bạn muốn đăng xuất?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-footer">
@@ -184,7 +184,6 @@
             </div>
         </div>
     </div>
-
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>

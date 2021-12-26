@@ -42,7 +42,7 @@
         </div>
         @endif
         <div>
-            <a href="{{URL::to('student/resultDetal/'.$e_s_status->id.'')}}"><button class="btn btn-outline-primary bg-primary text-light">Xem chi tiết</button></a>
+            <a href="{{URL::to('student/resultDetail/'.$e_s_status->id.'')}}"><button class="btn btn-outline-primary bg-primary text-light">Xem chi tiết</button></a>
             <a href="{{URL::to('student/exam')}}"><button class="btn btn-outline-primary bg-primary text-light">Trang chủ</button></a>
         </div>
     </div>

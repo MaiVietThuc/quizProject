@@ -21,23 +21,17 @@ Route::get('/', function () {
 //login  & logout route
 
     // admin
-Route::get('/adminlogin',function(){ 
-    return view('admin.admin_login');
-});
+Route::get('/adminlogin','AdminController@getAdLogin');
 Route::get('/adminLogout','AdminController@adminLogout');
 Route::post('/postAdminLogin', 'AdminController@adminLogin');
 
     // teacher
-Route::get('/teacherLogin',function(){ 
-    return view('teacher.teacher_login');
-});
+Route::get('/teacherLogin','TeacherController@getTeacherLogin');
 Route::get('/teacherLogout','TeacherController@teacherLogout');
 Route::post('/postTeacherLogin', 'TeacherController@postTeacherLogin');
 
     // student
-Route::get('/studentLogin',function(){ 
-    return view('student.studentLogin');
-});
+Route::get('/studentLogin','StudentController@getStudentLogin');
 Route::post('/postStudentLogin', 'StudentController@postStudentLogin');
 Route::get('/studentLogout','StudentController@studentLogout');
 
@@ -174,14 +168,17 @@ Route::prefix('student')->middleware('student')->group(function () {
     Route::get('/class','StudentController@getClass');
     Route::get('/viewClass/{id}','StudentController@getViewClass');
 
-    Route::get('/historyClass','StudentController@historyClass');
-    Route::get('/doExam/{id}','StudentController@checkTimeToDoExam');
+    // Route::get('/historyClass','StudentController@historyClass');
+    Route::get('/checkDoExam/{id}','StudentController@checkTimeToDoExam');
     Route::get('/feedback','StudentController@getFeedback');
+    Route::get('/doExam/{id}','StudentController@doExam');
 
     Route::post('/submitExam/{id}','StudentController@postSubmitExam');
 
-    Route::get('/resultDetal/{id}','StudentController@resultDetail');
+    Route::get('/resultDetail/{id}','StudentController@resultDetail');
     Route::get('/accSetting','StudentController@accSetting');
+    Route::post('/postManagerAccount','StudentController@postManagerAccount');
+
     Route::post('/postExamFeedback','StudentController@postExamFeedback');
 
     
@@ -192,7 +189,7 @@ Route::prefix('student')->middleware('student')->group(function () {
 Route::get('/check','StudentController@check');
 
 
-// forgetPassword
+// student forgetPassword
 Route::get('/studentForgetPassword',function(){
     return view('student.forgetPassword');
 });

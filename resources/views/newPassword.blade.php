@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student-login</title>
+    <title>Đặt lại mật khẩu</title>
     
     <!-- bootstrap 4.5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -40,7 +40,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Mật khẩu mới:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-password">                                            
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false" disabled>                                  
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href="#"><i class="fas fa-eye"></i></a>
@@ -49,7 +49,7 @@
                         </div>
                         <label for="product-reference">Xác nhật mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-confirm-pw">
-                            <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false" disabled>
+                            <input type="password" id="password-confirm" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false">
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href="#"><i class="fas fa-eye"></i></a>

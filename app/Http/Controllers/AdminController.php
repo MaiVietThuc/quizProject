@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
+    public function getAdLogin()
+    {
+        if(Auth::guard('admin')->check())
+        {
+            return redirect()->back();
+        }
+        else
+        {
+            return view('admin.admin_login');
+        }
+    }
 
     public function adminLogin(Request $request)
     {

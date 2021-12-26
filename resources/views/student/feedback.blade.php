@@ -32,6 +32,7 @@
                         <th>STT</th>
                         <th>Bài kiểm tra</th>                          
                         <th>Phản hổi của bạn</th>
+                        <th>Thời điểm phản hồi</th>
                         <th>Phản hồi của giảng viên</th>
                     </tr>
                 </thead>
@@ -40,7 +41,8 @@
                         <tr>      
                             <td>{{$loop->index}}</td>        
                             <td>{{$fb->exam->title}}</td>   
-                            <td>{{$fb->student_feedback}}</td>                      
+                            <td>{{$fb->student_feedback}}</td> 
+                            <td>{{\Carbon\Carbon::parse($fb->created_at)->format('d/m/Y')}}</td>                     
                             <td>
                                 <div class="text-center">
                                     @if ($fb->teacher_rep =='')

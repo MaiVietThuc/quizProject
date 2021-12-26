@@ -12,6 +12,18 @@ use Mail;
 
 class StudentController extends Controller
 {
+    public function getStudentLogin()
+    {
+        if(Auth::guard('student')->check())
+        {
+            return redirect()->back();
+        }
+        else
+        {
+            return view('student.studentLogin');
+        }
+    }
+
     public function postStudentLogin(Request $request)
     {
         $this->validate($request,[
@@ -38,16 +50,44 @@ class StudentController extends Controller
     public function getDashboard()
     {
         $currStudentId = Auth::guard('student')->id();
-        $student = App\student::with(['cclass'])->find($currStudentId);
+        $student = App\student::select('id')->with('cclass')->find($currStudentId);
+
+        // get Ready exam
         $classId = array(); 
         foreach($student->cclass as $val){
-            $classId[]=$val->id;
+            if($val->date_close < Carbon::now())
+            {
+                continue;
+            }else{
+                $classId[]=$val->id;
+            }
         }
-        $exam = App\exam::whereIn('class_id',$classId);
-        $feedback = App\feedback::where('student_id',$currStudentId);
-        $examFeedback = App\exam_feedback::where('student_id',$currStudentId);
-        $feedbackAll = $feedback->count() + $examFeedback->count();
-        return view('student.dashboard',compact('student','exam','feedback','examFeedback','feedbackAll'));
+        $usedExam = App\exam_student_status::where('student_id',$currStudentId)->get(); //exam that student tested
+        $usedExamId = array();
+        foreach($usedExam as $e){
+            $usedExamId[]=$e->exam_id;
+        }
+        $exams = App\exam::whereIn('class_id',$classId)->where('status',1)->whereNotIn('id',$usedExamId)->where(function($query) {
+            return $query
+                   ->where('time_close','>',Carbon::now())
+                   ->orWhere('type','=','exam_test');
+           })->count();
+
+        // get history exam & average mark
+        $usdExam = App\exam_student_status::where('student_id',$currStudentId);
+        $usedExam = $usdExam->count();
+        $avgMark = $usdExam->avg('mark');
+
+        // get class
+        $allclassid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->get()->toArray();
+        $class = App\cclass::whereIn('id',$allclassid)->where('date_close','>=',Carbon::now())->where('status',1)->count();
+        $history_class = App\cclass::whereIn('id',$allclassid)->where('date_close','<',Carbon::now())->where('status',1)->count();
+        $allClass = $class + $history_class;
+
+        // get examFeedback
+        $examFeedBack = App\exam_feedback::where('student_id',$currStudentId)->count();
+
+        return view('student.dashboard',compact('student','exams','usedExam','avgMark','allClass','examFeedBack'));
     }
 
     public function getExam()
@@ -56,7 +96,12 @@ class StudentController extends Controller
         $student = App\student::select('id')->with('cclass')->find($currStudentId);
         $classId = array(); 
         foreach($student->cclass as $val){
-            $classId[]=$val->id;
+            if($val->date_close < Carbon::now())
+            {
+                continue;
+            }else{
+                $classId[]=$val->id;
+            }
         }
         $usedExam = App\exam_student_status::where('student_id',$currStudentId)->get(); //exam that student tested
         $usedExamId = array();
@@ -68,7 +113,6 @@ class StudentController extends Controller
                    ->where('time_close','>',Carbon::now())
                    ->orWhere('type','=','exam_test');
            })->get();
-
         return view('student.exam')->with('exams',$exams);
     }
 
@@ -84,57 +128,107 @@ class StudentController extends Controller
     {
         $classid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->get()->toArray();
         $class = App\cclass::whereIn('id',$classid)->where('date_close','>=',Carbon::now())->where('status',1)->get();
-        return view('student.class')->with('class',$class);
+        $history_class = App\cclass::whereIn('id',$classid)->where('date_close','<',Carbon::now())->where('status',1)->get();
+        return view('student.class')->with('class',$class)->with('history_class',$history_class);
     }
 
-    public function historyClass()
-    {
-        $classid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->get()->toArray();
-        $class = App\cclass::whereIn('id',$classid)->where('date_close','<',Carbon::now())->where('status',1)->get();
-        return view('student.historyClass')->with('class',$class);
-    }
+    // public function historyClass()
+    // {
+    //     $classid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->get()->toArray();
+    //     $class = App\cclass::whereIn('id',$classid)->where('date_close','<',Carbon::now())->where('status',1)->get();
+    //     return view('student.historyClass')->with('class',$class);
+    // }
 
-    public function checkTimeToDoExam($id)
-    {
-        $exam = App\exam::find($id);
-        $openTime = Carbon::parse($exam->time_open)->format('Y/m/d H:i:s');
-        $closeTime = Carbon::parse($exam->timme_close)->format('Y/m/d H:i:s');
-        $timeCoutDown = Carbon::now()->diffInSeconds($openTime);
-         
-        $checkExamStatus = App\exam_student_status::where('exam_id',$id)->where('student_id',Auth::guard('student')->id())->count();
-        if($checkExamStatus ==0)
-        {
-            if($timeCoutDown >10 )
-            {
-                return view('student.countDownExam',compact('timeCoutDown','exam'));
-            }
-            elseif($timeCoutDown<10 || $timeCoutDown=0)
-            { 
-                return view('student.doExam')->with('exam',$exam)->with('success',"Bắt đầu làm bài!");
-            }
-            elseif($timeCoutDown <0)
-            {
-                $remainingTime = Carbon::now()->diffInSeconds($closeTime);
-                return view('student.doExam')->with('exam',$exam)->with('remainingTime',$remainingTime)->with('error',"Bạn đã vào thi trễ!");
-            }
-        }
-        else
-        {
-            return redirect()->back()->with('error','Bạn đã làm bài kiểm tra này rồi!');
-        }
-    }
-
-
+    
     public function getViewClass($id)
     {
         $classinf = App\cclass::find($id);
         return view('student.classview')->with('classinf',$classinf);
     }
 
+
+    public function checkTimeToDoExam($id)
+    {
+        $exam = App\exam::find($id);
+        $openTime = Carbon::parse($exam->time_open)->format('Y/m/d H:i:s');
+        $closeTime = Carbon::parse($exam->time_close)->format('Y/m/d H:i:s');
+
+        $checkExamStatus = App\exam_student_status::where('exam_id',$id)->where('student_id',Auth::guard('student')->id())->count();
+        $timeCoutDown = Carbon::now()->diffInSeconds($openTime);
+        if($checkExamStatus ==0)
+        {
+            if(!is_null($exam->time_close) && Carbon::parse($exam->time_close) <= Carbon::now())
+            {
+                return redirect('student/exam')->with('error','Bài thi đã kết thúc!!');
+            }
+            elseif($timeCoutDown <= 5 || (Carbon::parse($exam->time_open) <= Carbon::now() && Carbon::parse($exam->time_close) > Carbon::now()))
+            {
+                return view('student.confirmDoExam')->with('exam',$exam);
+            }
+            elseif(Carbon::parse($exam->time_open) > Carbon::now() && $timeCoutDown > 5)
+            { 
+                return view('student.countDownExam',compact('timeCoutDown','exam'));
+            }
+        }
+        else
+        {
+            return redirect('student/exam')->with('error','Bạn đã làm bài kiểm tra này rồi!');
+        }
+        
+    }
+
+    public function doExam($id)
+    {
+        $exam = App\exam::find($id);
+        $openTime = Carbon::parse($exam->time_open)->format('Y/m/d H:i:s');
+        $closeTime = Carbon::parse($exam->time_close)->format('Y/m/d H:i:s');
+        
+        $checkExamStatus = App\exam_student_status::where('exam_id',$id)->where('student_id',Auth::guard('student')->id())->count();
+        $timeCoutDown = Carbon::now()->diffInSeconds($openTime);
+        if($checkExamStatus ==0)
+        {
+            if(!is_null($exam->time_close) && Carbon::parse($exam->time_close) < Carbon::now())
+            {
+                return redirect('student/exam')->with('error','Bài thi đã kết thúc!!');
+            }
+            elseif($timeCoutDown <= 5)
+            {
+                $studentStatus = new App\exam_student_status;
+                $studentStatus->exam_id = $id;
+                $studentStatus->student_id = Auth::guard('student')->id();
+                $studentStatus->status = 'used';
+                $studentStatus->time_start = Carbon::now()->format('Y-m-d H:i:s');
+                $studentStatus->save();                
+                return view('student.doExam')->with('exam',$exam)->with('success',"Bắt đầu làm bài!");
+            }
+            elseif(Carbon::parse($exam->time_open) <= Carbon::now() && Carbon::parse($exam->time_close) > Carbon::now())
+            {
+                // insert into exam_student_status
+                $studentStatus = new App\exam_student_status;
+                $studentStatus->exam_id = $id;
+                $studentStatus->student_id = Auth::guard('student')->id();
+                $studentStatus->status = 'used';
+                $studentStatus->time_start = Carbon::now()->format('Y-m-d H:i:s');
+                $studentStatus->save();       
+                $remainingTime = Carbon::now()->diffInSeconds($closeTime);
+                return view('student.doExam')->with('exam',$exam)->with('remainingTime',$remainingTime)->with('error',"Bạn đã vào thi trễ!");
+            }
+            elseif(Carbon::parse($exam->time_open) > Carbon::now() && $timeCoutDown > 5)
+            { 
+                return view('student.countDownExam',compact('timeCoutDown','exam'));
+            }
+        }
+        else
+        {
+            return redirect()->back()->with('error','Bạn đã làm bài kiểm tra này rồi!');
+        }   
+    }
+
+
     public function postSubmitExam(Request $request, $id)
     {
-        $checkExamStatus = App\exam_student_status::where('exam_id',$id)->where('student_id',Auth::guard('student')->id())->count();
-        if($checkExamStatus ==0)
+        $checkExamStatus = App\exam_student_status::where('exam_id',$id)->where('student_id',Auth::guard('student')->id())->first();
+        if($checkExamStatus->status =='used')
         {
             $exam = App\exam::find($id);
             $qu = $exam->question;
@@ -157,19 +251,22 @@ class StudentController extends Controller
                     $true_ans +=1;
                 }         
             }
-            // insert student_exam status
-            $exam_student_status = new App\exam_student_status;
-            $exam_student_status->exam_id = $id;
-            $exam_student_status->student_id = $currStudent;
-            $exam_student_status->status = 'used';
-            $exam_student_status->mark = $mark;
-            $exam_student_status->time_start = Carbon::parse($request->time_start)->format('Y-m-d H:i:s');
-            $exam_student_status->time_end = Carbon::now()->format('Y-m-d H:i:s');
-            $exam_student_status->save();
+            // update table student_exam_status
+            $checkExamStatus->status = 'completed';
+            $checkExamStatus->mark = $mark;
+            $checkExamStatus->correct_answer = $true_ans;
+            $checkExamStatus->time_end = Carbon::now()->format('Y-m-d H:i:s');
+            $checkExamStatus->save();
 
-            return view('student.resultAfterExam')->with('exam',$exam)->with('true_ans',$true_ans)->with('e_s_status',$exam_student_status);
-        }else{
-            return redirect()->back()->with('error','Bạn đã làm bài kiểm tra này rồi!');
+            return view('student.resultAfterExam')->with('exam',$exam)->with('true_ans',$true_ans)->with('e_s_status',$checkExamStatus);
+        }
+        elseif($checkExamStatus->status =='completed')
+        {
+            return redirect()->back()->with('error','Bạn đã hoàn thành bài kiểm tra này rồi!');
+        }
+        else
+        {
+            return redirect()->back()->with('error','Lỗi!!');
         }
     }
 
@@ -177,8 +274,23 @@ class StudentController extends Controller
     {
         $currStudent = Auth::guard('student')->id();
         $stStudentExam = App\exam_student_status::find($id);
+        if($stStudentExam == NULL)
+        {
+            return redirect('/student/exam')->with('error','Bạn chưa làm bài kiểm tra này');
+        }
         $exam_info = App\exam::find($stStudentExam->exam_id);
         $studentAnswer = App\student_answer::where('exam_id',$stStudentExam->exam_id)->where('student_id',$currStudent)->with('question')->get();
+
+        if($exam_info->type == 'exam' && Carbon::parse($exam_info->time_close) > Carbon::now())
+        {
+            return redirect()->back()->with('error','Bạn sẽ xem được đáp án chi tiết khi thời gian kiểm tra kết thúc!');
+        }
+
+        if($studentAnswer->count() == 0 || $studentAnswer == NULL)
+        {
+            return view('student.resultDetail')->with('failed','Kết quả: 0 điểm. Bạn chưa trả lời câu hỏi nào của bài kiểm tra!')->with('exam_info',$exam_info);
+        }
+
         return view('student.resultDetail')->with('stStudentExam',$stStudentExam)->with('studentAnswer',$studentAnswer)->with('exam_info',$exam_info);
     }
 
@@ -187,6 +299,28 @@ class StudentController extends Controller
         $currStudent = Auth::guard('student')->id();
         $you = App\student::find($currStudent);
         return view('student.account')->with('you',$you);
+    }
+    public function postManagerAccount(Request $request)
+    {
+        $this->validate($request,[
+            'old_password' => 'min:6',
+            'password' => 'min:6|confirmed|different:old-password',
+            'avatar'=> 'image|mimes:jpeg,png,jpg,svg|max:5000', 
+        ]);
+        $student = App\student::find(Auth::guard('student')->id());
+        if($request->hasFile('avatar')){
+            $file = $request->file('avatar');
+            $nameAvatar = $currAccount->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
+            $file->move('img/avatar',$nameAvatar);
+            $student->avatar = 'img/avatar/'.$nameAvatar;
+        }
+        if(Hash::check($request->old_password , $student->password)){
+            $student-> password = Hash::make($request->password);
+        }else{
+            return redirect()->back()->with('error','Mật khẩu cũ không chính xác!');
+        }
+        $student->save();
+        return redirect('student/accSetting')->with('success','Cập nhật tài khoản thành công!!');
     }
     
     public function getFeedback()
@@ -209,7 +343,7 @@ class StudentController extends Controller
     // test
     public function check()
     {
-        return view('mailForgetPassword');
+        return view('student.confirmDoExam');
     }
 
 

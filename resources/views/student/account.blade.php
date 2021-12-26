@@ -29,9 +29,9 @@
     <!-- mainform -->
     <form class="" action="{{URL::to('/student/postManagerAccount')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card-box shadow col-10 ml-5  pt-3 pb-3">
+        <div class="row card-box shadow">
+            <div class="col-lg-6 ">
+                <div class=" col-10 ml-5  pt-3 pb-3">
                     <div class="form-group mb-3">
                         <label for="product-name">MSSV:</label>
                         <input type="text" id="mssv" name="mssv" value="{{$you->student_code}}" class="form-control" disabled>
@@ -59,12 +59,46 @@
                                     <option value="0" >Nam</option>
                                     <option value="1"selected>Nữ</option>
                                 @endif
-                                
                             </select>
                     </div>             
 
                     <div class="form-group mb-3">
-                        <label for="product-reference">Đổi mật khẩu:<span class="text-danger">*</span></label>
+                        <label for="product-summary">Email:</label>
+                        <input class="form-control" name="email"  rows="2" value="{{$you->email}}" autocomplete="false" disabled>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="fallback">
+                            <label for="image1">Ảnh đại diện<span class="text-danger"> : </span></label><br>
+                            @if (!empty($you->avatar))
+                                <img src="{{asset($you->avatar)}}" alt="" width="35px" height="35px">
+                            @else
+                                <img src="{{asset('img/user.png')}}" alt="" width="35px" height="35px">
+                            @endif
+                            <input  name="avatar" type="file" rows="3" id="avatar"/>
+                        </div>
+                    </div>
+                    
+                </div> <!-- end card-box -->
+            </div> <!-- end col -->
+
+            <div class="col-lg-6">
+                <div class=" col-10  mr-5 pt-3 pb-3">
+                    <h5>Đổi mật khẩu</h5>
+
+                    <div class="form-group mb-3">
+                        <label for="product-reference">Mật khẩu cũ:</label>
+                        <div class="input-group input-group-merge" id="form-old-password">                                            
+                            <input type="password" name="old_password" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false">                                  
+                            <div class="input-group-append" data-password="false">
+                                <div class="input-group-text">
+                                    <a href=""><i class="fas fa-eye"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="product-reference">Đổi mật khẩu:</label>
                         <div class="input-group input-group-merge" id="form-password">                                            
                             <input type="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
                             <div class="input-group-append" data-password="false">
@@ -84,28 +118,6 @@
                                     <a href=""><i class="fas fa-eye"></i></a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div> <!-- end card-box -->
-            </div> <!-- end col -->
-
-            <div class="col-lg-6">
-
-                <div class="card-box shadow col-10  mr-5 pt-3 pb-3">
-                    <div class="form-group mb-3">
-                        <label for="product-summary">Email:</label>
-                        <input class="form-control" name="email"  rows="2" value="{{$you->email}}" autocomplete="false" disabled>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <div class="fallback">
-                            <label for="image1">Ảnh đại diện<span class="text-danger"> : </span></label><br>
-                            @if (!empty($you->avatar))
-                                <img src="{{asset($you->avatar)}}" alt="" width="35px" height="35px">
-                            @else
-                                <img src="{{asset('img/user.png')}}" alt="" width="35px" height="35px">
-                            @endif
-                            <input  name="avatar" type="file" rows="3" id="avatar"/>
                         </div>
                     </div>
 
@@ -148,11 +160,19 @@
                     $('#form-confirm-pw i').addClass("fa-eye-slash");
                 }
             });
+
+            $("#form-old-password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#form-old-password input').attr("type") == "text"){
+                    $('#form-old-password input').attr('type', 'password');
+                    $('#form-old-password i').addClass( "fa-eye" );
+                    $('#form-old-password i').removeClass( "fa-eye-slash" );
+                }else if($('#form-old-password input').attr("type") == "password"){
+                    $('#form-old-password input').attr('type', 'text');
+                    $('#form-old-password i').removeClass( "fa-eye" );
+                    $('#form-old-password i').addClass("fa-eye-slash");
+                }
+            });
         });
-    </script>
-    <script>
-        window.onbeforeunload = function() {
-            return "";
-        }
     </script>
 @endsection

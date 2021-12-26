@@ -37,7 +37,7 @@
             <h3 class=" m-2 font-weight-bold text-primary ">{{$exam->title}}</h3> 
         </div>
         <hr class="my-2">
-        <form action="{{URL::to('student/submitExam/'.$exam->id.'')}}" method="POST">
+        <form action="{{URL::to('student/submitExam/'.$exam->id.'')}}" method="POST" id="form_exam">
             @csrf
             <input type="hidden" id="time_start" name="time_start" value="">
         <div class="row">
@@ -55,22 +55,22 @@
                             <div class="question-answer">
                                 <ul class="list-group list-group-flush bg-light">
                                     <li class="list-group-item border-0 bg-light">
-                                        <input type="radio" id="{{$ques->id}}-ans_1" class="{{$ques->id}}" name="question_{{$ques->id}}"  value="ans_1"> 
+                                        <input type="radio" id="{{$ques->id}}-ans_1" class="{{$ques->id}}" name="question_{{$ques->id}}" onclick="getCheck(this);" value="ans_1"> 
                                         <label class="m-0 pl-2" for="{{$ques->id}}-ans_1">  {{$ques->ans_1}}</label> 
                                     </li>
                                     <li class="list-group-item border-0 bg-light">
-                                        <input type="radio" id="{{$ques->id}}-ans_2" class="{{$ques->id}}" name="question_{{$ques->id}}" value="ans_2"> 
+                                        <input type="radio" id="{{$ques->id}}-ans_2" class="{{$ques->id}}" name="question_{{$ques->id}}" onclick="getCheck(this);" value="ans_2"> 
                                         <label class="m-0 pl-2" for="{{$ques->id}}-ans_2">  {{$ques->ans_2}}</label>
                                     </li>
                                     @if($ques->ans_3 != '')
                                     <li class="list-group-item border-0 bg-light">
-                                        <input type="radio" id="{{$ques->id}}-ans_3" class="{{$ques->id}}" name="question_{{$ques->id}}" value="ans_3"> 
+                                        <input type="radio" id="{{$ques->id}}-ans_3" class="{{$ques->id}}" name="question_{{$ques->id}}" onclick="getCheck(this);" value="ans_3"> 
                                         <label class="m-0 pl-2" for="{{$ques->id}}-ans_3">  {{$ques->ans_3}}</label>
                                     </li>
                                     @endif
                                     @if($ques->ans_4 != '')
                                     <li class="list-group-item border-0 bg-light">
-                                        <input type="radio" id="{{$ques->id}}-ans_4" class="{{$ques->id}}" name="question_{{$ques->id}}" value="ans_4">
+                                        <input type="radio" id="{{$ques->id}}-ans_4" class="{{$ques->id}}" name="question_{{$ques->id}}" onclick="getCheck(this);" value="ans_4">
                                         <label class="m-0 pl-2" for="{{$ques->id}}-ans_4">  {{$ques->ans_4}}</label>
                                     </li>
                                     @endif
@@ -92,14 +92,14 @@
                                 value="{{$exam->duration*60}}" 
                             @endif
                             size="5" readonly="true" style="font-size: 2rem; font-weight:bold;">
-                        <h6 class="font-weight-bold">Hoàn thành: <strong class="ml-2">2/10</strong> </h6>
+                        <h6 class="font-weight-bold">Hoàn thành: <strong class="ml-2" id="completed-question">0</strong><strong class="ml-2">/{{$exam->question->count()}}</strong> </h6>
                     </div>
                     <hr>
                     <p>Danh sách câu hỏi:</p>
                     <div class="question-link row row-cols-5 m-2 mt-3">
                         @foreach ($exam->question as $qu)
                             <div class="col p-1">
-                                <a href="#quest_{{$loop->index+1}}" id="link-question" class="pagination-question text-decoration-none text-dark font-weight-bold rounded-circle">{{$loop->index+1}}</a>
+                                <a href="#quest_{{$qu->id}}" id="link-question-{{$qu->id}}" class="pagination-question text-decoration-none text-dark font-weight-bold rounded-circle">{{$loop->index+1}}</a>
                             </div>
                         @endforeach
                     </div>
@@ -115,7 +115,7 @@
     </div>
 
 
-    {{--  --}}
+
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <script>
@@ -126,10 +126,13 @@
             var dateTime = date+' '+time;
             document.getElementById('time_start').value = dateTime;
         }
+        window.onbeforeunload = function() {
+            return "";
+        }
     </script>
     <script>
-         $("#bt-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#bt-alert").slideUp(500);
+        $("#bt-alert").fadeTo(2000, 500).slideUp(500, function(){
+        $("#bt-alert").slideUp(500);
         });
     </script>
     <script>
@@ -141,10 +144,25 @@
                 var seconds = Math.floor(remainTime-(minutes*60));
                 displayRemainTime.value = minutes +" : "+seconds;
                 remainTime = remainTime -1;
+                if(remainTime == 600){
+                    alert("Còn 10 phút!");
+                }
                 if(remainTime == 0){
                     clearInterval(countdown);
+                    document.getElementById('form_exam').submit();
                 }
             }
+    </script>
+    <script>
+        function getCheck(e){
+            let getId = e.id.split('-')[0];
+            const thisId = document.getElementById('link-question-'+getId);
+            thisId.classList.remove("text-dark");
+            thisId.classList.add("bg-primary","text-white","complete-quest");
+            //change completed question
+            let completeQuest = document.getElementsByClassName('complete-quest').length;
+            document.getElementById('completed-question').innerHTML =completeQuest;
+        }
     </script>
 
 </body>

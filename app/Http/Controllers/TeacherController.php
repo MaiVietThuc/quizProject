@@ -12,6 +12,18 @@ use DB;
 
 class TeacherController extends Controller
 {
+    public function getTeacherLogin()
+    {
+        if(Auth::guard('teacher')->check())
+        {
+            return redirect()->back();
+        }
+        else
+        {
+            return  view('teacher.teacher_login');
+        }
+    }
+
     public function postTeacherLogin(Request $request)
     {
         $this->validate($request,[

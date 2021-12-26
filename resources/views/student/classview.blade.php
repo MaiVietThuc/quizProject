@@ -60,13 +60,12 @@
                 <td>
                     {{-- Tổng:{{$classinf->exam->count()}} <br> --}}
                     @foreach ($classinf->exam as $ex)
-                        @if((\Carbon\Carbon::parse($ex->date_open)) > (\Carbon\Carbon::now()))
-                            {{$ex->title}}
-                            {{-- <span class="badge badge-secondary ml-2">Chưa kiểm tra</span> --}}
+                        @if( (\Carbon\Carbon::parse($ex->time_close) < \Carbon\Carbon::now() || $ex->type =='exam_test' ) )
+                             <a href="{{URL::to('student/resultDetail/'.$ex->id)}}" class="text-decoration-none"> {{$ex->title}}<span class="badge badge-secondary ml-2">=> chi tiết</span></a>
                             <br>
                         @else
                             {{$ex->title}}
-                            {{-- <span class="badge badge-success ml-2">Đã kiểm tra</span> --}}
+                            <span class="badge badge-info ml-2">Chưa tới ngày kiểm tra</span>
                             <br>
                         @endif
                     @endforeach

@@ -127,9 +127,4 @@
         }
     });
 </script>
-    <script>
-        window.onbeforeunload = function() {
-            return "";
-        }
-    </script>
 @endsection

@@ -85,7 +85,7 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('student/doExam/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
+                                        <a href="{{URL::to('student/checkDoExam/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
                                     </div>
                                 </td>
                             </tr>
