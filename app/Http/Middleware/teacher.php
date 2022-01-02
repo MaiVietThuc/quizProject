@@ -24,7 +24,8 @@ class teacher
             if($teacher->status == 1){
                 return $next($request);
             }else{
-                return Redirect::back()->with('error', 'Lỗi tài khoản!! Tài khoản đã bị vô hiệu hóa!'); 
+                Auth::guard('teacher')->logout();
+                return redirect('/teacherLogin')->with('error', 'Lỗi tài khoản!! Tài khoản đã bị vô hiệu hóa!'); 
             }
         }else{
             return redirect('/teacherLogin')->with('error','Chưa đăng nhập!!');

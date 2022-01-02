@@ -76,16 +76,13 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if(\Carbon\Carbon::parse($ex->time_open) > (\Carbon\Carbon::now()))
-                                        <span class="badge badge-secondary">Đang chờ</span> <br>
-                                    @else
-                                        <span class="badge badge-success">Sẵn sàng</span>   <br>
-                                    @endif
                                     @if ($ex->status ==1)
-                                            <a class="badge bg-soft-success text-primary m-0 p-0" href="{{URL::to('teacher/exam/changeStatus/'.$ex->id.'/off')}}" style="font-size: 35px;"><i class="fas fa-toggle-on"></i></a>
-                                        @else
-                                            <a class="badge text-danger m-0 p-0" href="{{URL::to('teacher/exam/changeStatus/'.$ex->id.'/on')}}" style="font-size: 35px;"><i class="fas fa-toggle-off"></i></i></a> 
-                                        @endif
+                                        <span class="badge badge-success">Soạn xong</span><br>
+                                        {{-- <a class="badge bg-soft-success text-primary m-0 p-0" href="{{URL::to('teacher/exam/changeStatus/'.$ex->id.'/off')}}" style="font-size: 35px;"><i class="fas fa-toggle-on"></i></a> --}}
+                                    @else
+                                        <span class="badge badge-secondary text-info">Đang soạn</span> <br>
+                                        {{-- <a class="badge text-danger m-0 p-0" href="{{URL::to('teacher/exam/changeStatus/'.$ex->id.'/on')}}" style="font-size: 35px;"><i class="fas fa-toggle-off"></i></i></a>  --}}
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="text-center">

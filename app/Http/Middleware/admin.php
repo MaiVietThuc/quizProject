@@ -23,7 +23,8 @@ class admin
             if($admin->status == 1){
                 return $next($request);
             }else{
-                return Redirect::back()->with('error', 'Lỗi tài khoản!! Tài khoản đã bị vô hiệu hóa!'); 
+                Auth::guard('admin')->logout();
+                return redirect('/adminlogin')->with('error', 'Lỗi tài khoản!! Tài khoản đã bị vô hiệu hóa!'); 
             }
         }else{
             return redirect('/adminlogin')->with('error','Chưa đăng nhập!!');

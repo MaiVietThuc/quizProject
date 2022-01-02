@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
         if(Auth::guard('admin')->check())
         {
-            return redirect()->back();
+            return redirect('/admin');
         }
         else
         {
@@ -35,7 +35,7 @@ class AdminController extends Controller
         ];
           
         if (Auth::guard('admin')->attempt($arr)) {
-            return redirect('/admin/')->with('success','Chào mừng '.Auth::guard('admin')->user()->name.'!!');
+            return redirect('/admin')->with('success','Chào mừng '.Auth::guard('admin')->user()->name.'!!');
         } else {
             return redirect('/adminlogin')->with('error', 'Thông tin đăng nhập không chính xác!!'); 
         }
@@ -76,19 +76,15 @@ class AdminController extends Controller
     }
     public function getClass()
     {
-        $class = App\cclass::with(['subject','teacher','student'])->get() ;
-        return view('admin.showClass',compact('class'));
+        $class = App\cclass::with(['subject','teacher','student'])->where('date_close','>',date('Y-m-d'))->get();
+        $hisClass = App\cclass::with(['subject','teacher','student'])->where('date_close','<',date('Y-m-d'))->get() ;
+        return view('admin.showClass',compact('class','hisClass'));
     }
     public function getExam()
     {
-        $exams = App\exam::all();
-        // return view('admin.showExam',compact('exams'));
-        foreach ($exams as $ex) {
-            print_r($ex);
-            // foreach($ex->cclass as $x){
-            //     print_r($x->class_name);
-            // }
-        }
+        $exams = App\exam::where('time_close','>',Carbon::now())->get();
+        $hisExams = App\exam::where('time_close','<',Carbon::now())->orWhere('type','=','exam_test')->get();
+        return view('admin.showExam',compact('exams','hisExams'));
     }
     public function getMajors()
     {
@@ -97,7 +93,7 @@ class AdminController extends Controller
     }
     public function getFeedback()
     {
-        $feedbacks = App\feedback::all();
+        $feedbacks = App\feedback::with('student')->get();
         return view('admin.showFeedback',compact('feedbacks'));
     }
     public function getAdminAccount()
@@ -106,6 +102,60 @@ class AdminController extends Controller
         return view('admin.showAdmin',compact('admins'));
     }
 
+    public function getManagerClass($id)
+    {
+        $class = App\cclass::with('student')->find($id);
+        $student = App\student::with('majors')->get();
+        return view('admin.managerClass')->with('class',$class)->with('student',$student);
+    }
+
+    public function classExamResult($id)
+    {
+        $examInfo = App\exam::where('id',$id)->with('cclass')->first();
+        $classExamResult = App\exam_student_status::where('exam_id',$id)->with('student')->get();
+        return view('admin.classExamResult')->with('examInfo',$examInfo)->with('classExamResult',$classExamResult);
+    }
+
+    public function showExamQuestion($id)
+    {
+        $exam = App\exam::with('question')->where('id',$id)->first();
+        if($exam->time_close < Carbon::now() || $exam->type == 'exam_test')
+        {
+            return view('admin.viewExamQuestion',compact('exam'));
+        }else{
+            return redirect('/showExamQuestionADM/'.$id);
+        }
+    }
+
+    public function showExamQuestionADM($id)
+    {
+        $exam = App\exam::with('question')->where('id',$id)->first();
+        return view('admin.viewExamQuestion',compact('exam'));
+    }
+        
+    public function studentExamResultDetail($studentId, $examId)
+    {
+        $studentInf = App\student::find($studentId);
+        $stStudentExam = App\exam_student_status::where('student_id',$studentId)->where('exam_id',$examId)->first();
+        if($stStudentExam == NULL)
+        {
+            return redirect()->back()->with('error','Sinh viên chưa làm bài kiểm tra này');
+        }
+        $exam_info = App\exam::find($examId);
+        $studentAnswer = App\student_answer::where('exam_id',$examId)->where('student_id',$studentId)->with('question')->get();
+
+        if($exam_info->type == 'exam' && Carbon::parse($exam_info->time_close) > Carbon::now())
+        {
+            return redirect()->back()->with('error','Bài kiểm tra chưa kết thúc!');
+        }
+
+        if($studentAnswer->count() == 0 || $studentAnswer == NULL)
+        {
+            return view('teacher.studentresultDetail')->with('failed','Sinh viên chưa trả lời câu hỏi nào của bài kiểm tra!')->with('exam_info',$exam_info);
+        }
+        return view('admin.studentResultDetail')->with('stStudentExam',$stStudentExam)->with('studentAnswer',$studentAnswer)
+        ->with('exam_info',$exam_info)->with('studentinf',$studentInf);
+    }
 
 
     // get add
@@ -124,7 +174,12 @@ class AdminController extends Controller
         $role = App\admin_role::all();
         return view('admin.addAdmin',compact('role'));
     }
-
+    public function getAddClass()
+    {
+        $subjects = App\subject::all();
+        $teacher = App\teacher::all();
+        return view('admin.addClass',compact('subjects','teacher'));
+    }
 
 
 
@@ -232,10 +287,38 @@ class AdminController extends Controller
         $admin ->save();
         return redirect('admin/getAddAdmin')->with('success','Thêm thành công');
     }
+    public function postAddClass(Request $request)
+    {
+        $this->validate($request,[
+            'class_code' => 'required|unique:class,class_code',
+            'name' => 'required|unique:class,class_name',
+            'subject'=> 'required',
+            'teacher'=> 'required',
+            'date_open' => 'required|',
+            'date_close' => 'required|after:date_open',
+            'status' => 'required',
+        ]);
+        $class = new App\cclass;
+        $class->class_code = $request->class_code;
+        $class->class_name = $request->name;
+        $class->subject_id = $request->subject;
+        $class->teacher_id = $request ->teacher;
+        $class->status = $request->status;
+        $class->date_open = $request->date_open;
+        $class->date_close = $request->date_close;
+        $class->save(); 
+        return redirect('admin/class')->with('success','Thêm thành công!!');
+    }
 
-
-
-
+    public function postClassAddStudent(Request $request, $id)
+    {
+        $class = App\cclass::find($id);
+        if(!empty($request->student)){
+            $student= $request->student;
+            $class->student()->attach($student);
+        }
+        return redirect()->back()->with('success','Thêm thành công!!');
+    }
 
     // change status
     public function changeTeacherStatus($id, $status)
@@ -292,6 +375,18 @@ class AdminController extends Controller
         }
         $majors ->save();
         return redirect('admin/majors')->with('success', 'Sửa thành công');
+    }
+
+    public function changeFeedbackStatus($id, $status)
+    {
+        $feedback = App\feedback::find($id);
+        if($status =='off'){
+            $feedback->status = 0;          
+        }elseif($status  =='on'){
+            $feedback->status= 1;
+        }
+        $feedback ->save();
+        return redirect('admin/feedback')->with('success', 'Sửa thành công');
     }
 
 
@@ -481,12 +576,14 @@ class AdminController extends Controller
     public function deleteClass($id)
     {
         $class = App\cclass::find($id);
-        try {
+        if($class->date_open< Carbon::now && $class)
+        {
+            return redirect()->back()->with('error','Không thể xóa lớp đang học!');    
+        }else{
             $class->delete();
-            return redirect('admin/class')->with('success','Đã xóa thành công!');    
-        }catch (\Exception $e) {
-              return redirect('admin/class')->with('error',$e);
+            return redirect('admin/class')->with('success','Đã xóa thành công!');   
         }
+     
     }
 
     public function deleteExam($id)
@@ -522,6 +619,17 @@ class AdminController extends Controller
           }
     }
 
+       // delete student from class
+       public function deleteStudentInClass($class_id, $student_id)
+       {
+           $class = App\cclass::find($class_id);
+           if(Carbon::parse($class->date_close) < Carbon::now()){
+               return redirect()->back()->with('error','Không thể xóa vì lớp học này đã kết thúc!');
+           }
+           $class->student()->detach($student_id);
+           return redirect('admin/managerClass/'.$class_id.'')->with('success','Xóa thành công!');
+       }
+
     // account manager
     public function adAccountSetting()
     {
@@ -533,7 +641,7 @@ class AdminController extends Controller
         $this ->validate($request,[
             'name' => 'required',
             'email' => 'required',
-            'old-password' => 'min:6',
+            'old_password' => 'min:6',
             'password' => 'min:6|confirmed|different:old-password',
             'avatar'=> 'image|mimes:jpeg,png,jpg,svg|max:5000', 
         ]);
@@ -549,12 +657,14 @@ class AdminController extends Controller
             $currAccount->avatar = '/img/user.png';
         }
         if($request-> changepw ==1){
-            if(Hash::check($request->old-password , $currAccount->password)){
+            if(Hash::check($request->old_password , $currAccount->password)){
                 $currAccount-> password = Hash::make($request->password);
             }
         }
         $currAccount->save();
         return redirect('admin/')->with('success','Cập nhật tài khoản thành công!!');
     }
+
+  
 
 }

@@ -16,7 +16,7 @@ class StudentController extends Controller
     {
         if(Auth::guard('student')->check())
         {
-            return redirect()->back();
+            return redirect('/student');
         }
         else
         {
@@ -36,7 +36,7 @@ class StudentController extends Controller
         ];
           
         if (Auth::guard('student')->attempt($arr)) {
-            return redirect('/student/')->with('success','Chào mừng '.Auth::guard('student')->user()->name.'!!')->with('email',$request->email)->with('password',$request->password);
+            return redirect('/student')->with('success','Chào mừng '.Auth::guard('student')->user()->name.'!!')->with('email',$request->email)->with('password',$request->password);
         } else {
             return redirect()->back()->with('error', 'Thông tin đăng nhập không chính xác!!'); 
         }
@@ -126,7 +126,7 @@ class StudentController extends Controller
 
     public function getClass()
     {
-        $classid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->get()->toArray();
+        $classid = App\class_student::select('class_id')->where('student_id',Auth::guard('student')->id())->where('status',1)->get()->toArray();
         $class = App\cclass::whereIn('id',$classid)->where('date_close','>=',Carbon::now())->where('status',1)->get();
         $history_class = App\cclass::whereIn('id',$classid)->where('date_close','<',Carbon::now())->where('status',1)->get();
         return view('student.class')->with('class',$class)->with('history_class',$history_class);

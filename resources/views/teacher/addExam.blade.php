@@ -44,16 +44,11 @@
                     <div class="form-group mb-3">
                         <label for="class">Lớp:<span class="text-danger">*</span></label>
                         <select class="form-control select2" name="class" id="class">
-                            @foreach ($currTeacher->cclass as $cl)
-                                <option value="{{$cl->id}}">{{$cl->class_name}}</option>                    
+                            @foreach ($currTeacher->cclass as $cl)   
+                                <option value="{{$cl->id}}">{{$cl->class_name}}</option>             
                             @endforeach
-                          </select>
+                        </select>
                     </div>
-
-                    {{-- <div class="form-group mb-3">
-                            <label for="total_mark">Tổng điểm:<span class="text-danger">*</span></label>
-                            <input type="number" id="total_mark" name="total_mark" class="form-control" placeholder="Điểm tối đa">
-                    </div> --}}
 
                     <div class="form-group mb-3">
                             <label for="duration">Thời gian làm bài:<span class="text-danger">*</span></label>
@@ -80,23 +75,6 @@
                     <div class="form-group mb-3">
                             <label for="time_open">Thời gian mở đề:</span></label>
                             <input type="datetime-local" id="time_open" name="time_open" class="form-control" placeholder="Thời gian mở đề">
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="mb-2">Trạng thái</label>
-                        <br/>
-                        <div class="radio form-check-inline mr-4">
-                            <label for="status1">
-                                <input type="radio" id="status1" value="1" name="status"> 
-                                Khả dụng:
-                            </label>
-                        </div>
-                        <div class="radio form-check-inline">
-                            <label for="status2">
-                                <input type="radio" id="status2" value="0" name="status" checked>
-                                 Ẩn:
-                            </label>
-                        </div>
                     </div>
 
                     <div class="text-center mb-3" >

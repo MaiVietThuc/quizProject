@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <!-- custom -->
     <link href="{{asset('/css/admin_style.css')}}" rel="stylesheet">
-
+    @yield('head')
 </head>
 
 <body id="page-top">
@@ -41,8 +41,8 @@
             
             <!-- Nav Item - Pages  Menu -->
 
-            <li class="nav-item @if (Request::path() == 'teacher/') active  @endif">
-                <a class="nav-link" href="{{URL::to('/teacher/')}}">
+            <li class="nav-item @if (Request::path() == 'teacher') active  @endif">
+                <a class="nav-link" href="{{URL::to('/teacher')}}">
                     <i class="fa fa-home" aria-hidden="true"></i>
                     <span>Tổng quan</span></a>
             </li>
@@ -54,13 +54,13 @@
                 Lớp
             </div>
 
-            <li class="nav-item @if (Request::path() == 'teacher/class') active  @endif">
+            <li class="nav-item {{ Request::is('teacher/class*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{URL::to('/teacher/class/')}}">
                     <i class="fas fa-users"></i>
                     <span>Lớp phụ trách</span></a>
             </li>
 
-            <li class="nav-item @if (Request::path() == 'teacher/historyClass') active  @endif">
+            <li class="nav-item {{ Request::is('teacher/historyClass*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{URL::to('/teacher/historyClass/')}}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Lịch sử phụ trách</span></a>
@@ -72,13 +72,13 @@
                 Bài kiểm tra
             </div>
 
-            <li class="nav-item @if (Request::path() == 'teacher/exam') active  @endif">
+            <li class="nav-item {{ Request::is('teacher/exam') ? 'active' : '' }}">
                 <a class="nav-link" href="{{URL::to('/teacher/exam/')}}">
                     <i class="fas fa-users"></i>
                     <span>Quản lý bài kiểm tra</span></a>
             </li>
 
-            <li class="nav-item @if (Request::path() == 'teacher/exam/history') active  @endif">
+            <li class="nav-item {{ Request::is('teacher/exam/history') ? 'active' : ''}}">
                 <a class="nav-link" href="{{URL::to('/teacher/exam/history')}}">
                     <i class="fas fa-users"></i>
                     <span>Lịch sử & kết quả kiểm tra</span></a>
@@ -86,7 +86,7 @@
 
             <hr class="sidebar-divider d-none d-md-block">
 
-            <li class="nav-item ">
+            <li class="nav-item {{ Request::is('teacher/feedback*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{URL::to('/teacher/feedback')}}">
                     <i class="fas fa-comment-dots"></i>
                     <span>Phản hổi sinh viên</span></a>
@@ -147,7 +147,7 @@
                             <!-- User Inf -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{URL::to('teacher/info')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Cài đặt tài khoản
                                 </a>

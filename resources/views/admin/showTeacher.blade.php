@@ -1,5 +1,9 @@
 @extends('admin_layout')
 
+@section('head')
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+@endsection
+
 @section('admin_content')
     
     <!-- breadcrumb -->
@@ -11,8 +15,6 @@
         </ol>
     </nav>
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-5 text-gray-800 pl-3">Quản lý giảng viên</h1>
     {{-- alert  --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
@@ -29,7 +31,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách giảng viên</h5>
+            <h5 class="m-2 font-weight-bold text-primary d-inline-block" id="examTitle">Danh sách giảng viên</h5>
             <!-- button -->
             <div class="wrap d-inline-block float-right">
                 <div class="dropdown d-inline-block mt-1 mr-1">
@@ -51,9 +53,6 @@
                         document.getElementById('exel-input').click()
                     });
                 </script>
-                <button class="btn btn-light mt-1" type="button">
-                    <i class="fas fa-file-excel pr-2"></i>Xuất file exel
-                </button>
             </div>
             <!-- end button -->
         </div>
@@ -114,7 +113,13 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.colVis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script>
+        const examTitle = document.getElementById('examTitle').textContent;
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 paging: false,
@@ -125,7 +130,18 @@
                 "columnDefs": [ {
                 "targets": [6],
                 "orderable": false
-                } ]
+                }],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Xuất excel',
+                        messageTop: examTitle,
+                        exportOptions: {
+                            columns: [0,2,3,4]
+                        }
+                    }
+                ]
             });
         });
     </script>    

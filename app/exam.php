@@ -22,4 +22,8 @@ class exam extends Model
     {
         return $this -> belongsTo('App\cclass','class_id','id');
     }
+    public function student()
+    {
+        return $this->belongsToMany(student::class,'exam_student_status','exam_id','student_id');
+    }
 }

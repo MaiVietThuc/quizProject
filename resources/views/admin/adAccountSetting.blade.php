@@ -64,7 +64,7 @@
                         </div>
                         <label for="product-reference">Mật khẩu cũ:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-old-password">                                            
-                            <input type="password" id="oldpassword" name="old-password" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false" disabled>                                  
+                            <input type="password" id="oldpassword" name="old_password" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href="javascript:void(0)"><i class="fas fa-eye"></i></a>

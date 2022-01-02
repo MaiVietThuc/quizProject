@@ -25,7 +25,7 @@
 <div class="card shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-
+            <h6 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách phản hồi</h6>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -46,7 +46,7 @@
                             <td>
                                 <div class="text-center">
                                     @if ($fb->teacher_rep =='')
-                                        <p class="font-weight-light text-info">Chưa trả lời</p>
+                                        <span class="badge badge-danger">Chưa được trả lời</span>
                                     @else
                                         {{$fb->teacher_rep}}
                                     @endif

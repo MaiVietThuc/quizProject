@@ -11,8 +11,6 @@
         </ol>
     </nav>
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-5 text-gray-800 pl-3">Quản lý bài kiểm tra</h1>
     @if (Session('success'))
         <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -20,78 +18,163 @@
         </div>
     @endif
     @if (Session('error'))
-    <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        {{session('error')}}!
-    </div>
-@endif
+        <div class="alert alert-danger alert-dismissible text-center position-fixed" id="bt-alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{session('error')}}!
+        </div>
+    @endif
 
-    <!-- DataTales Example -->
+    <!-- DataTales -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h5 class="m-2 font-weight-bold text-primary d-inline-block">Danh sách bài kiểm tra</h5>
+        <div class="card-header py-3 border-bottom-0">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#list-exam" role="tab" aria-controls="nav-list-exam" aria-selected="true">
+                    <h6 class="m-2 font-weight-bold text-primary d-inline-block">Bài kiểm tra đang chờ</h6>
+                  </a>
+                  <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#history-exam" role="tab" aria-controls="nav-history-exam" aria-selected="false">
+                    <h6 class="m-2 font-weight-bold text-primary d-inline-block">Lịch sử kiểm tra</h6>
+                  </a>
+                </div>
+              </nav>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID bài</th>
-                            <th>Tên bài kiểm tra</th>
-                            <th>Lớp</th>
-                            <th>Tổng điểm</th>
-                            <th>Thời gian mở đề</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($exams as $exam)
-                            <tr>
-                                <td>ex-{{$exam->id}}</td>                               
-                                <td>{{$exam->title}}</td>
-                                @foreach ($exam->cclass as $ec)
-                                <td>{{$ec->class_name}}</td>
-                                @endforeach                  
-                                <td>{{$exam->total_marks}} điểm</td>
-                                <td>{{$exam->dateTime_Open}}</td>
-                                <td>
-                                    <div class="text-center">
-                                        @if ($exam->status ==1)
-                                            <p class="text-sucess">Đã kiểm tra</p>
-                                        @else
-                                            <p class="text-danger">Chưa kiểm tra</p>
-                                        @endif
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
-                                        <a onclick="deleteConfirm()" href="{{URL::to('admin/delete/exam/'.$exam->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="tab-content" id="nav-tabContent">
+                {{-- list tab --}}
+                <div class="tab-pane fade show active" id="list-exam" role="tabpanel" aria-labelledby="nav-list-exam">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable-listexam" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Số thứ tự</th>
+                                    <th>Tên bài kiểm tra</th>
+                                    <th>Lớp</th>
+                                    <th>Tổng số câu hỏi</th>
+                                    <th>Loại</th>
+                                    <th>Thời gian làm bài</th>
+                                    <th>Thời gian mở/đóng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($exams as $ex)
+                                    <tr>
+                                        <td>{{$loop->index}}</td>                               
+                                        <td>{{$ex->title}}</td>                  
+                                        <td>{{$ex->cclass->class_name}}</td>
+                                        <td>{{$ex->total_question}}</td>
+                                        <td>
+                                            @if ($ex->type == 'exam')
+                                                Kiểm tra tính điểm
+                                            @else
+                                                Kiểm tra thử
+                                            @endif
+                                        </td>
+                                        <td>{{$ex->duration}}</td>
+                                        <td>
+                                            Từ: <strong>{{$ex->time_open}}</strong> <br>
+                                             đến: <strong>{{$ex->time_close}}</strong> 
+                                        </td>
+                                        <td class="text-center">
+                                            @if(\Carbon\Carbon::parse($ex->time_open) < \Carbon\Carbon::now())
+                                                <span class="badge badge-secondary">Đang kiểm tra</span> 
+                                            @else
+                                                <span class="badge badge-primary">Chuẩn bị kiểm tra</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="{{URL::to('/admin/classExamResult/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{-- history tab --}}
+                <div class="tab-pane fade" id="history-exam" role="tabpanel" aria-labelledby="nav-history-exam">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable-historyexam" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Số thứ tự</th>
+                                    <th>Tên bài kiểm tra</th>
+                                    <th>Lớp</th>
+                                    <th>Tổng số câu hỏi</th>
+                                    <th>Loại</th>
+                                    <th>Thời gian làm bài</th>
+                                    <th>Thời gian mở/đóng</th>
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($hisExams as $he)
+                                    <tr>
+                                        <td>{{$loop->index}}</td>                               
+                                        <td>{{$he->title}}</td>                  
+                                        <td>{{$he->cclass->class_name}}</td>
+                                        <td>{{$he->total_question}}</td>
+                                        <td>
+                                            @if ($he->type == 'exam')
+                                                Kiểm tra tính điểm
+                                            @else
+                                                Kiểm tra thử
+                                            @endif
+                                        </td>
+                                        <td>{{$he->duration}}</td>
+                                        <td>
+                                            @if ($he->type == 'exam')
+                                                Từ: <strong>{{$he->time_open}}</strong> <br>
+                                                đến: <strong>{{$he->time_close}}</strong> 
+                                            @else
+                                                Không
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <a href="{{URL::to('/admin/classExamResult/'.$he->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
+            
         </div>
     </div>
+
 
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function () {
-            $('#dataTable').DataTable({
+            $('#dataTable-listexam').DataTable({
                 paging: false,
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Tìm kiếm..."
                 },
                 "columnDefs": [ {
-                "targets": [6],
+                "targets": [8],
+                "orderable": false
+                } ]
+            });
+            $('#dataTable-historyexam').DataTable({
+                paging: false,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Tìm kiếm..."
+                },
+                "columnDefs": [ {
+                "targets": [7],
                 "orderable": false
                 } ]
             });

@@ -41,13 +41,13 @@
                             <th>Bài kiểm tra</th>
                             <th>Nội dung</th>
                             <th>Phản hổi</th>
-                            <th>Trả lời</th>
+                            {{-- <th>Trả lời</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($feedback as $fb)
                             <tr>
-                                <td>fb-{{$fb->student->name}}</td>                        
+                                <td>{{$fb->student->name}}</td>                        
                                 <td>
                                     @if ($fb->student->avatar =='')
                                         <img src="{{asset('/img/user.png')}}" alt="" width="35px" height="35px">
@@ -57,17 +57,19 @@
                                 </td>   
                                 <td>{{$fb->exam->title}}</td>    
                                 <td>{{$fb->student_feedback}}</td>                       
-                                <td>
-                                    @if ($fb->teacher_rep !='')
+                                <td class="text-center">
+                                    @if (!is_null($fb->teacher_rep))
                                         {{$fb->teacher_rep}}
                                     @else
-                                        Chưa phản hồi!
+                                    <span class="badge badge-danger">Chưa trả lời</span>
+                                    <form method="POST" action="{{URL::to('teacher/feedback/repFeedback/'.$fb->id)}}" >
+                                        @csrf
+                                        <div class="d-flex justify-content-center">
+                                            <textarea name="teacherRepFeedback" rows="2" cols="30" ></textarea>
+                                            <button type="submit" class="btn btn-primary action-icon text-white ml-2">Lưu</button>
+                                        </div>
+                                    </form>
                                     @endif
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <a href="{{URL::to('teacher/feedback/repFeedback/'.$fb->id)}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -89,7 +91,7 @@
                     searchPlaceholder: "Tìm kiếm..."
                 },
                 "columnDefs": [ {
-                "targets": [3],
+                "targets": [4],
                 "orderable": false
                 } ]
             });

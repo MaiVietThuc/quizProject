@@ -26,7 +26,7 @@
                                     </span>
                                 </a>
                             </div>                                 
-                            <p class="text-muted mb-4 mt-3">Đăng nhập dành cho giảng viên</p>';
+                            <p class="text-muted mb-4 mt-3">Đăng nhập dành cho giảng viên</p>
                             @if (session('error'))
                                 <div class="alert alert-dannger alert-dismissible">
                                     <button type="button" class="close" data-dismiss="alert">×</button>

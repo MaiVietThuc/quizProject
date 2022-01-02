@@ -51,10 +51,13 @@ class student extends Authenticatable
     }
     public function exam()
     {
-        return $this->belongsToMany(exam::class,'exam_student_status','student_id','exam_id')->withPivot('status');
+        return $this->belongsToMany(exam::class,'exam_student_status','student_id','exam_id');
     }
     public function exam_feedback()
     {
         return $this->hasMany(exam_feedback::class,'student_id','id');
+    }
+    public function exam_student_status(){
+        return $this -> hasMany('App\exam_student_status','student_id','id');
     }
 }

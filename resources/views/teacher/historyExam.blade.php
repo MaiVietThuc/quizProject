@@ -44,7 +44,7 @@
                             <th>Loại</th>
                             <th>Thời gian mở/đóng</th>
                             <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th>Xem chi tiết</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,13 +55,9 @@
                                 <td>{{$ex->duration}} Phút</td>
                                 <td>{{$ex->cclass->class_name}}</td>
                                 <td>
-                                    @if ($ex->total_question =='')
-                                    0
-                                    @else
                                     {{$ex->total_question}}
-                                    @endif
                                 </td>
-                                <td>{{$ex->type}}</td>
+                                <td>@if($ex->type == 'exam')Kiểm tra @else Kiểm tra thử @endif</td>
                                 <td>
                                     @if ($ex->type == 'exam')
                                         Từ: <strong>{{$ex->time_open->format('H:i d/m/Y') }}</strong> <br>
@@ -79,7 +75,7 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{URL::to('/teacher/class/manager/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
+                                        <a href="{{URL::to('/teacher/exam/classExamResult/'.$ex->id.'')}}" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>

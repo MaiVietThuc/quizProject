@@ -14,4 +14,8 @@ class exam_student_status extends Model
     {
         return $this->belongsTo('App\exam','exam_id','id');
     }
+    public function student()
+    {
+        return $this->belongsTo('App\student','student_id','id');
+    }
 }

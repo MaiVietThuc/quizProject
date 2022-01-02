@@ -24,7 +24,7 @@
     <div class="home-wrap">
         <div class="container justify-content-lg-center align-items-center bg-transparent">
             <div class="jumbotron bg-transparent">
-                <div class="d-flex bg-white p-3 rounded">
+                <div class="d-flex bg-transparent  p-3 rounded">
                     <a href="#" class="brand d-inline mr-3">
                         <img src="{{asset('/img/tlu.png')}}" height="70px" alt="">
                     </a>

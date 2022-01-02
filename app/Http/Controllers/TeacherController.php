@@ -16,7 +16,7 @@ class TeacherController extends Controller
     {
         if(Auth::guard('teacher')->check())
         {
-            return redirect()->back();
+            return redirect('/teacher');
         }
         else
         {
@@ -53,9 +53,37 @@ class TeacherController extends Controller
     public function getDashboard()
     {
         $currTeacher = App\teacher::with(['subject'])->find(Auth::guard('teacher')->id());
-        // print_r($currTeacher);
-        return view('teacher.dashboard')->with('currTeacher',$currTeacher);
+
+        // get class
+        $now = date('Y-m-d');
+        $teachClass =App\cclass::where('teacher_id','=',(Auth::guard('teacher')->id()))->where('date_close','>=',$now)->count();
+
+        // get feedback 
+        $feedbackId = DB::table('class')->join('exam','class.id','=','exam.class_id')
+        ->join('exam_feedback','exam.id','=','exam_feedback.exam_id')
+        ->select('exam_feedback.id')->where('class.teacher_id','=',Auth::guard('teacher')->id())
+        ->get();
+        $FbId = array();
+        foreach($feedbackId as $fb)
+        {
+            $FbId[] = $fb->id ;
+        }
+        $feedback = App\exam_feedback::whereIn('id',$FbId)->count();
+        $feedbackNotRep = App\exam_feedback::whereIn('id',$FbId)->where('teacher_rep',NULL)->count();
+
+        // getExam
+        $classesId = App\cclass::select('id')->where('teacher_id','=',Auth::guard('teacher')->id())->get()->toArray();
+        $exams = App\exam::whereIn('class_id',$classesId)->where('status',0)->count();
+
+        return view('teacher.dashboard',compact('feedback','feedbackNotRep','exams'))->with('currTeacher',$currTeacher);
     }
+
+    public function teacherInfo()
+    {
+        $currTeacher = App\teacher::find(Auth::guard('teacher')->id());
+        return view('teacher.accountInfo')->with('currTeacher',$currTeacher);
+    }
+
     public function showClass()
     {
         $now = date('Y-m-d');
@@ -73,7 +101,12 @@ class TeacherController extends Controller
     {
         $class = App\cclass::where('teacher_id','=',(Auth::guard('teacher')->id()))->where('date_close','<',date('Y-m-d'))->get();
         return view('teacher.historyClass')->with('class',$class);
+    }
 
+    public function getHistoryClassManager($id)
+    {
+        $classinf = App\cclass::with(['student'])->find($id);
+        return view('teacher.classManager')->with('classinf',$classinf);
     }
 
     public function showTeacherExamAvalable()
@@ -98,6 +131,9 @@ class TeacherController extends Controller
     public function deleteStudentInClass($class_id, $student_id)
     {
         $class = App\cclass::find($class_id);
+        if(Carbon::parse($class->date_close) < Carbon::now()){
+            return redirect()->back()->with('error','Không thể xóa vì lớp học này đã kết thúc!');
+        }
         $class->student()->detach($student_id);
         return redirect('teacher/class/manager/'.$class_id.'')->with('success','Xóa thành công!');
     }
@@ -135,7 +171,6 @@ class TeacherController extends Controller
             'duration' => 'required',
             'class' => 'required',
             'type' => 'required',
-            'status' => 'required',
         ]);
         $exam = new App\exam;
         $exam->title = $request->name;
@@ -147,7 +182,7 @@ class TeacherController extends Controller
             $time_close = Carbon::parse($time_open)->addMinutes($request->duration)->format('Y/m/d H:i:s');
             $exam->time_close = $time_close;
         }
-        $exam->status = $request->status;
+        $exam->status = 0;
         $exam->class_id = $request->class;
         $exam->type = $request->type;
         $exam->save();
@@ -293,10 +328,52 @@ class TeacherController extends Controller
         $feedback = App\exam_feedback::whereIn('id',$FbId)->with('exam')->with('student')->get();
         return view('teacher.examFeedback')->with('feedback',$feedback);
     }
-    public function repFeedback($id)
+    public function repFeedback(Request $request, $id)
     {
-        $feedback = App\exam_feedback::find($id)->with('exam')->with('student')->get();
-        // print_r($feedback);
-        return view('teacher.repFeedback')->with('feedback',$feedback);  
+        $this->validate($request,[
+            'teacherRepFeedback' => 'required', 
+        ]);
+        $feedback = App\exam_feedback::find($id);
+        $feedback->teacher_rep = $request->teacherRepFeedback;
+        $feedback->save();
+        return redirect('teacher/feedback')->with('success','Trả lời thành công!');
+    }
+
+
+    // exam result
+    public function classExamResult($id)
+    {
+        $examInfo = App\exam::where('id',$id)->with('cclass')->first();
+        $classExamResult = App\exam_student_status::where('exam_id',$id)->with('student')->get();
+        return view('teacher.classExamResult')->with('examInfo',$examInfo)->with('classExamResult',$classExamResult);
+    }
+
+
+
+
+
+    // get detail result studentExam
+    public function studentExamResultDetail($studentId, $examId)
+    {
+        $studentInf = App\student::find($studentId);
+        $stStudentExam = App\exam_student_status::where('student_id',$studentId)->where('exam_id',$examId)->first();
+        if($stStudentExam == NULL)
+        {
+            return redirect()->back()->with('error','Sinh viên chưa làm bài kiểm tra này');
+        }
+        $exam_info = App\exam::find($examId);
+        $studentAnswer = App\student_answer::where('exam_id',$examId)->where('student_id',$studentId)->with('question')->get();
+
+        if($exam_info->type == 'exam' && Carbon::parse($exam_info->time_close) > Carbon::now())
+        {
+            return redirect()->back()->with('error','Bạn sẽ xem được đáp án chi tiết khi thời gian kiểm tra kết thúc!');
+        }
+
+        if($studentAnswer->count() == 0 || $studentAnswer == NULL)
+        {
+            return view('teacher.studentresultDetail')->with('failed','Sinh viên chưa trả lời câu hỏi nào của bài kiểm tra!')->with('exam_info',$exam_info);
+        }
+        return view('teacher.studentresultDetail')->with('stStudentExam',$stStudentExam)->with('studentAnswer',$studentAnswer)
+        ->with('exam_info',$exam_info)->with('studentinf',$studentInf);
     }
 }

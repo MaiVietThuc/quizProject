@@ -126,9 +126,6 @@
             var dateTime = date+' '+time;
             document.getElementById('time_start').value = dateTime;
         }
-        window.onbeforeunload = function() {
-            return "";
-        }
     </script>
     <script>
         $("#bt-alert").fadeTo(2000, 500).slideUp(500, function(){
@@ -144,7 +141,7 @@
                 var seconds = Math.floor(remainTime-(minutes*60));
                 displayRemainTime.value = minutes +" : "+seconds;
                 remainTime = remainTime -1;
-                if(remainTime == 600){
+                while(remainTime == 600){
                     alert("Còn 10 phút!");
                 }
                 if(remainTime == 0){

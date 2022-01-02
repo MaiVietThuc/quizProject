@@ -1,5 +1,8 @@
 @extends('teacher_layout')
-
+@section('head')
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+    
+@endsection
 @section('teacher_content')
     
     <!-- breadcrumb -->
@@ -61,10 +64,20 @@
                     <td>
                         {{-- Tổng:{{$classinf->exam->count()}} <br> --}}
                         @foreach ($classinf->exam as $ex)
-                            @if((\Carbon\Carbon::parse($ex->date_open)) > (\Carbon\Carbon::now()))
-                                {{$ex->title}}<span class="badge badge-secondary ml-2">Chưa kiểm tra</span><br>
+                            @if($ex->type=='exam')
+                                @if((\Carbon\Carbon::parse($ex->date_open)) > (\Carbon\Carbon::now()))
+                                    <a href="{{URL::to('teacher/exam/classExamResult/'.$ex->id)}}">
+                                        {{$ex->title}}<span class="badge badge-secondary ml-2">Chưa kiểm tra</span><br>
+                                    </a>
+                                @else
+                                    <a href="{{URL::to('teacher/exam/classExamResult/'.$ex->id)}}">
+                                        {{$ex->title}}<span class="badge badge-success ml-2">Đã kiểm tra</span><br>
+                                    </a>
+                                @endif
                             @else
-                                {{$ex->title}}<span class="badge badge-success ml-2">Đã kiểm tra</span><br>
+                                <a href="{{URL::to('teacher/exam/classExamResult/'.$ex->id)}}">    
+                                    {{$ex->title}}<span class="badge badge-success ml-2">Kiểm tra thử</span><br>
+                                </a>
                             @endif
                         @endforeach
                     </td>
@@ -75,7 +88,7 @@
     <hr>
     <div class="card shadow mb-4 p-2">
         <div class="table-responsive">
-            <h3 class="text-uppercase p-2 mt-0 mb-3">Danh sách sinh viên:</h3>
+            <h4 class="text-uppercase p-2 mt-0 mb-1">Danh sách sinh viên:</h4>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -122,18 +135,34 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.colVis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
                 paging: false,
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Tìm kiếm..."
+                    searchPlaceholder: "Tìm kiếm...",
+                    search: ""
                 },
                 "columnDefs": [ {
                 "targets": [6],
                 "orderable": false
-                } ]
+                }],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Xuất excel',
+                        exportOptions: {
+                            columns: [0,1,2,4,5]
+                        }
+                    }
+                ]
             });
         });
     </script>    

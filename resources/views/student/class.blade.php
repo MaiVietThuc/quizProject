@@ -7,7 +7,7 @@
         <ol class="breadcrumb bg-transparent">
             <li class="breadcrumb-item"><a href="/student/"><i class="fa fa-home" aria-hidden="true"></i></a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Lớp đang học</li>
+            <li class="breadcrumb-item active" aria-current="page">Lớp học</li>
         </ol>
     </nav>
 
@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    <!-- DataTales Example -->
+    <!-- DataTales -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <nav>

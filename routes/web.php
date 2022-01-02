@@ -56,6 +56,10 @@ Route::prefix('admin')->group(function () {
         Route::get('/exam','AdminController@getExam');
         Route::get('/majors','AdminController@getMajors');
         Route::get('/feedback','AdminController@getFeedback');
+        Route::get('/managerClass/{id}','AdminController@getManagerClass');
+        Route::get('/classExamResult/{id}','AdminController@classExamResult');
+        Route::get('/showExamQuestion/{id}','AdminController@showExamQuestion');
+        Route::get('/studentExamResultDetail/{studentId}&{examId}','AdminController@studentExamResultDetail');
         
 
         // get add
@@ -64,12 +68,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/getAddMajors',function(){
             return view('admin.addMajors');
         });
+        Route::get('/getAddClass','AdminController@getAddClass');
         
 
         // post add
         Route::post('/postAddStudent','AdminController@postAddStudent');
         Route::post('/postAddTeacher','AdminController@postAddTeacher');
         Route::post('/postAddMajors','AdminController@postAddMajors');
+        Route::post('/postAddClass','AdminController@postAddClass');
+        Route::post('/class/addStudent/{id}','AdminController@postClassAddStudent');
+
     
 
         // get edit
@@ -89,6 +97,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/changeStudentStatus/{id}/{status}','AdminController@changeStudentStatus');
         Route::get('/changeClassStatus/{id}/{status}','AdminController@changeClassStatus');
         Route::get('/changeMajorsStatus/{id}/{status}','AdminController@changeMajorsStatus');
+        Route::get('/changeFeedbackStatus/{id}/{status}','AdminController@changeFeedbackStatus');
+
+        // delete
+        Route::get('/deleteClass/{id}','AdminController@deleteClass');
+        Route::get('/deleteClassStudent/{class_id}/{student_id}','AdminController@deleteStudentInClass');
 
     });
     
@@ -110,6 +123,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/class/{id}','AdminController@deleteClass');
             Route::get('/feedback/{id}','AdminController@deleteFeedback');
         });
+        Route::get('/showExamQuestionADM/{id}','AdminController@showExamQuestionADM');
     });    
 
 });
@@ -117,6 +131,7 @@ Route::prefix('admin')->group(function () {
 // route for teacher
 Route::prefix('teacher')->middleware('teacher')->group(function () {
     Route::get('/','TeacherController@getDashboard');
+    Route::get('/info','TeacherController@teacherInfo');
 
     Route::prefix('class')->group(function () {
         Route::get('/','TeacherController@showClass');
@@ -126,6 +141,7 @@ Route::prefix('teacher')->middleware('teacher')->group(function () {
 
     Route::prefix('historyClass')->group(function () {
         Route::get('/','TeacherController@showHistoryClass');
+        Route::get('/manager/{id}','TeacherController@getHistoryClassManager');
         
     });
 
@@ -146,14 +162,17 @@ Route::prefix('teacher')->middleware('teacher')->group(function () {
         Route::post('/postAddQuestion/{id}','TeacherController@postAddQuestion');
         Route::get('/getEditQuestion/{id}','TeacherController@getEditQuestion');
         Route::post('/postEditQuestion/{id}','TeacherController@postEditQuestion');
-
-
         Route::get('/deleteQuestion/{id}','TeacherController@deleteQuestion');
+
+        // view class exam result
+        Route::get('/classExamResult/{id}','TeacherController@classExamResult');
+        Route::get('/studentExamResultDetail/{studentId}&{examId}','TeacherController@studentExamResultDetail');
+
     });
 
     Route::prefix('feedback')->group(function () {
         Route::get('/','TeacherController@showFeedback');
-        Route::get('/repFeedback/{id}','TeacherController@repFeedback');
+        Route::post('/repFeedback/{id}','TeacherController@repFeedback');
     });
 
 });
@@ -181,9 +200,6 @@ Route::prefix('student')->middleware('student')->group(function () {
 
     Route::post('/postExamFeedback','StudentController@postExamFeedback');
 
-    
-
-
 });
 // test
 Route::get('/check','StudentController@check');
@@ -196,3 +212,4 @@ Route::get('/studentForgetPassword',function(){
 Route::post('/postStudentFP','StudentController@postStudentFP');
 Route::get('/resetpwEmailConfirmStu/{id}/{token}','StudentController@resetpwEmailConfirmStu');
 Route::post('/pNewPassword','StudentController@pNewPassword');
+// student exam

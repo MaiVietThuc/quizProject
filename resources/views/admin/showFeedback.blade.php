@@ -10,9 +10,6 @@
             <li class="breadcrumb-item active" aria-current="page">Quản lý phản hồi</li>
         </ol>
     </nav>
-
-    <!-- Page Heading -->
-    <h1 class="h3 mb-5 text-gray-800 pl-3">Quản lý phản hồi</h1>
     @if (Session('success'))
         <div class="alert alert-success alert-dismissible text-center position-fixed" id="bt-alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -43,14 +40,14 @@
                             <th>Chủ đề</th>
                             <th>Nội dung</th>
                             <th>Trạng thái</th>
-                            <th>hành động</th>
+                            <th>Đánh dấu đã xem</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($feedbacks as $fb)
                             <tr>
-                                <td>fb-{{$fb->student_id}}</td>                               
-                                <td>Tên sv</td>                  
+                                <td>{{$fb->student->student_code}}</td>                               
+                                <td>{{$fb->student->name}}</td>                  
                                 <td>{{$fb->problem}}</td>   
                                 <td>{{$fb->problem_content}}</td>                           
                                 <td>
@@ -64,8 +61,11 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="" class="action-icon text-primary mr-2" style="font-size: 25px;"><i class="far fa-edit"></i></a>
-                                        <a onclick="deleteConfirm()" href="{{URL::to('admim/delete/feedback/'.$fb->id.'')}}" class="action-icon text-danger" style="font-size: 25px;"><i class="far fa-trash"></i></a>
+                                        @if ($fb->status ==1)
+                                            <a class="badge bg-soft-success text-primary m-0 p-0" href="{{URL::to('admin/changeFeedbackStatus/'.$fb->id.'/off')}}" style="font-size: 35px;"><i class="fas fa-toggle-on"></i></a>
+                                        @else
+                                            <a class="badge text-danger m-0 p-0" href="{{URL::to('admin/changeFeedbackStatus/'.$fb->id.'/on')}}" style="font-size: 35px;"><i class="fas fa-toggle-off"></i></i></a> 
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

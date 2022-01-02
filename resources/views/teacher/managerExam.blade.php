@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="form-group mb-3">
-                            <label for="duration">Thời gian làm bài:<span class="text-danger">*</span></label>
+                            <label for="duration">Thời gian làm bài (phút):<span class="text-danger">*</span></label>
                             <input type="number" id="duration" name="duration" class="form-control" placeholder="Thời gian làm bài (phút)" value="{{$exam->duration}}">
                     </div>
                     
@@ -81,21 +81,24 @@
                         <label class="mb-2">Trạng thái</label>
                         <br/>
                         <div class="radio form-check-inline mr-4">
-                            <label for="inlineRadio1">
-                                <input type="radio" id="inlineRadio1" value="1" name="status" @if ($exam->status =='1') checked @endif> 
-                                Khả dụng:
+                            <label for="inlineRadio3">
+                                <input type="radio" id="inlineRadio3" value="1" name="status" @if ($exam->status =='1') checked @endif> 
+                                Đã soạn xong đề
                             </label>
                         </div>
                         <div class="radio form-check-inline">
-                            <label for="inlineRadio2">
-                                <input type="radio" id="inlineRadio2" value="0" name="status" @if ($exam->type =='0') checked @endif>
-                                    Ẩn:
+                            <label for="inlineRadio4">
+                            <input type="radio" id="inlineRadio4" value="0" name="status" @if ($exam->status =='0') checked @endif>
+                                Đang soạn đề
                             </label>
                         </div>
+                        @if (($exam->status =='1'))
+                        <p class="font-italic">Bài kiểm tra đã soạn xong sẽ không thể sửa</p>
+                        @endif
                     </div>
 
                     <div class="text-center mb-3" >
-                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <button type="submit" class="btn btn-primary" @if($exam->status =='1')disabled @endif>Lưu</button>
                     </div>
                 </div>
             </form>            
@@ -109,7 +112,7 @@
                     <h4 class="d-inline-block">Tổng điểm:  <span class="badge badge-success">{{$exam->total_marks}}</span></h4>
                     <!-- button -->
                     <div class="d-inline-block float-right">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion" @if($exam->status =='1')disabled @endif>
                             <i class="fas fa-pen pr-2"></i>Thêm
                         </button>
                     </div>
@@ -126,7 +129,7 @@
                                 <td>
                                    <b>{{$loop->index+1}}. {{ Str::limit($qu->question_title, 90)}} <span class="badge badge-info">{{$qu->mark}}đ</span></b><br>
                                    @if ($qu->question_img !='')
-                                       <img src="{{asset($qu->question_img)}}" alt="">
+                                       <img src="{{asset($qu->question_img)}}" alt="" style="width: 40px; height: auto; display:block;">
                                    @endif
                                 
                                    <span class="pl-3 
@@ -370,9 +373,4 @@
         }
     });
 </script>
-    {{-- <script>
-        window.onbeforeunload = function() {
-            return "";
-        }
-    </script> --}}
 @endsection
