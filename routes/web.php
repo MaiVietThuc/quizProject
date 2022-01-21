@@ -103,6 +103,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/deleteClass/{id}','AdminController@deleteClass');
         Route::get('/deleteClassStudent/{class_id}/{student_id}','AdminController@deleteStudentInClass');
 
+
     });
     
 
@@ -126,12 +127,15 @@ Route::prefix('admin')->group(function () {
         Route::get('/showExamQuestionADM/{id}','AdminController@showExamQuestionADM');
     });    
 
+    // ajax
+    Route::get('/ajaxAddClass/{idSubject}','AdminController@ajaxAddClass');
 });
 
 // route for teacher
 Route::prefix('teacher')->middleware('teacher')->group(function () {
     Route::get('/','TeacherController@getDashboard');
     Route::get('/info','TeacherController@teacherInfo');
+    Route::post('/postManagerAccount','StudentController@postManagerAccount');
 
     Route::prefix('class')->group(function () {
         Route::get('/','TeacherController@showClass');
@@ -212,4 +216,4 @@ Route::get('/studentForgetPassword',function(){
 Route::post('/postStudentFP','StudentController@postStudentFP');
 Route::get('/resetpwEmailConfirmStu/{id}/{token}','StudentController@resetpwEmailConfirmStu');
 Route::post('/pNewPassword','StudentController@pNewPassword');
-// student exam
+

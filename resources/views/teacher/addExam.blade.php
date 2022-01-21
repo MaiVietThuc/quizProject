@@ -44,7 +44,7 @@
                     <div class="form-group mb-3">
                         <label for="class">Lớp:<span class="text-danger">*</span></label>
                         <select class="form-control select2" name="class" id="class">
-                            @foreach ($currTeacher->cclass as $cl)   
+                            @foreach ($cclass as $cl)   
                                 <option value="{{$cl->id}}">{{$cl->class_name}}</option>             
                             @endforeach
                         </select>

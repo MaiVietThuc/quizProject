@@ -86,10 +86,17 @@
                 <div class=" col-10  mr-5 pt-3 pb-3">
                     <h5>Đổi mật khẩu</h5>
 
+                    <div class="radio form-check mr-4 pl-0 mt-4">
+                        <label for="changepw">
+                            <input type="checkbox" id="changepw" value="1" name="changepw"> 
+                            Đổi mật khẩu
+                        </label>
+                    </div>
+
                     <div class="form-group mb-3">
                         <label for="product-reference">Mật khẩu cũ:</label>
                         <div class="input-group input-group-merge" id="form-old-password">                                            
-                            <input type="password" name="old_password" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false">                                  
+                            <input type="password" name="old_password" id="old_pw" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -100,7 +107,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Đổi mật khẩu:</label>
                         <div class="input-group input-group-merge" id="form-password">                                            
-                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
+                            <input type="password" name="password" id="pw" class="form-control" placeholder="Mật khẩu" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -112,7 +119,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Xác nhật mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-confirm-pw">
-                            <input type="password"  name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false">
+                            <input type="password" name="password_confirmation" id="confirm_pw" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false" disabled>
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -173,6 +180,23 @@
                     $('#form-old-password i').addClass("fa-eye-slash");
                 }
             });
+        });
+    </script>
+    <script>
+        const changePw = document.getElementById('changepw');
+        const old_pw = document.getElementById('old_pw');
+        const pw = document.getElementById('pw');
+        const confirm_pw = document.getElementById('confirm_pw');
+        changePw.addEventListener('change',function(){
+            if(this.checked == true){
+                old_pw.disabled = false;
+                pw.disabled = false;
+                confirm_pw.disabled = false;
+            }if(this.checked == false){
+                old_pw.disabled = true;
+                pw.disabled = true;
+                confirm_pw.disabled = true;
+            }
         });
     </script>
 @endsection

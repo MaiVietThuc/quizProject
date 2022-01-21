@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use DB;
+use Illuminate\Support\Facades\File; 
 
 class TeacherController extends Controller
 {
@@ -47,7 +48,32 @@ class TeacherController extends Controller
         return redirect('/teacherLogin');
     }
 
-
+    public function postManagerAccount(Request $request)
+    {
+        $this->validate($request,[
+            'old_password' => 'min:6',
+            'password' => 'min:6|confirmed|different:old-password',
+            'avatar'=> 'image|mimes:jpeg,png,jpg,svg|max:5000', 
+        ]);
+        $teacher = App\teacher::find(Auth::guard('teacher')->id());
+        if($request->hasFile('avatar')){
+            File::delete($teacher->avatar);
+            $file = $request->file('avatar');
+            $nameAvatar = $currAccount->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
+            $file->move('img/avatar',$nameAvatar);
+            $teacher->avatar = 'img/avatar/'.$nameAvatar;
+        }
+        if(changepw ==1)
+        {
+            if(Hash::check($request->old_password , $teacher->password)){
+                $teacher-> password = Hash::make($request->password);
+            }else{
+                return redirect()->back()->with('error','Mật khẩu cũ không chính xác!');
+            }
+        }
+        $teacher->save();
+        return redirect('student/info')->with('success','Cập nhật tài khoản thành công!!');
+    }
 
     // get show
     public function getDashboard()
@@ -160,7 +186,8 @@ class TeacherController extends Controller
     public function getAddExam()
     {
         $currTeacher = App\teacher::find(Auth::guard('teacher')->id());
-        return view('teacher.addExam')->with('currTeacher',$currTeacher);
+        $cclass = App\cclass::where('teacher_id',Auth::guard('teacher')->id())->where('date_close','>',Carbon::now())->get();
+        return view('teacher.addExam')->with('currTeacher',$currTeacher)->with('cclass',$cclass);
     }
 
     // post add exam
@@ -347,9 +374,6 @@ class TeacherController extends Controller
         $classExamResult = App\exam_student_status::where('exam_id',$id)->with('student')->get();
         return view('teacher.classExamResult')->with('examInfo',$examInfo)->with('classExamResult',$classExamResult);
     }
-
-
-
 
 
     // get detail result studentExam

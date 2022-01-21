@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Mail;
+use Illuminate\Support\Facades\File; 
 
 class StudentController extends Controller
 {
@@ -283,7 +284,7 @@ class StudentController extends Controller
 
         if($exam_info->type == 'exam' && Carbon::parse($exam_info->time_close) > Carbon::now())
         {
-            return redirect()->back()->with('error','Bạn sẽ xem được đáp án chi tiết khi thời gian kiểm tra kết thúc!');
+            return redirect('/student/exam')->with('error','Bạn sẽ xem được đáp án chi tiết khi thời gian kiểm tra kết thúc!');
         }
 
         if($studentAnswer->count() == 0 || $studentAnswer == NULL)
@@ -309,15 +310,19 @@ class StudentController extends Controller
         ]);
         $student = App\student::find(Auth::guard('student')->id());
         if($request->hasFile('avatar')){
+            File::delete($student->avatar);
             $file = $request->file('avatar');
-            $nameAvatar = $currAccount->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
+            $nameAvatar = $student->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
             $file->move('img/avatar',$nameAvatar);
             $student->avatar = 'img/avatar/'.$nameAvatar;
         }
-        if(Hash::check($request->old_password , $student->password)){
-            $student-> password = Hash::make($request->password);
-        }else{
-            return redirect()->back()->with('error','Mật khẩu cũ không chính xác!');
+        if($request->changepw == 1)
+        {
+            if(Hash::check($request->old_password , $student->password)){
+                $student-> password = Hash::make($request->password);
+            }else{
+                return redirect()->back()->with('error','Mật khẩu cũ không chính xác!');
+            }
         }
         $student->save();
         return redirect('student/accSetting')->with('success','Cập nhật tài khoản thành công!!');

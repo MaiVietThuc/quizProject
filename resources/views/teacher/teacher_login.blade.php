@@ -18,6 +18,9 @@
             <div class="col-md-8 col-lg-6 col-xl-5">
                 <div class="card bg-pattern">
                     <div class="card-body p-4">
+                        <a href="{{asset('')}}">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </a>
                         <div class="text-center w-75 m-auto">
                             <div class="auth-logo">
                                 <a href="index.html" class="logo logo-light text-center">

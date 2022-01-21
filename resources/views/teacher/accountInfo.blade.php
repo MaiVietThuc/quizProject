@@ -21,7 +21,7 @@
             {{session('error')}}!
         </div>
     @endif
-    <form class="" action="{{URL::to('/teacher/postManagerAccount???')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+    <form class="" action="{{URL::to('/teacher/postManagerAccount')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         <div class="row card-box shadow">
             <div class="col-lg-6">
                 <h6 class="text-uppercase bg-light p-2 mt-0 mb-3">Thông tin cá nhân:</h6>
@@ -70,9 +70,15 @@
                     <h5>Đổi mật khẩu</h5>
 
                     <div class="form-group mb-3">
+                        <div class="radio form-check mr-4 pl-0 mt-4">
+                            <label for="changepw">
+                                <input type="checkbox" id="changepw" value="1" name="changepw"> 
+                                Đổi mật khẩu
+                            </label>
+                        </div>
                         <label for="product-reference">Mật khẩu cũ:</label>
                         <div class="input-group input-group-merge" id="form-old-password">                                            
-                            <input type="password" name="old_password" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false">                                  
+                            <input type="password" name="old_password" id="oldpassword" class="form-control" placeholder="Mật khẩu cũ" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -83,7 +89,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Đổi mật khẩu:</label>
                         <div class="input-group input-group-merge" id="form-password">                                            
-                            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" autocomplete="false">                                  
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Mật khẩu" autocomplete="false" disabled>                                  
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -95,7 +101,7 @@
                     <div class="form-group mb-3">
                         <label for="product-reference">Xác nhật mật khẩu:<span class="text-danger">*</span></label>
                         <div class="input-group input-group-merge" id="form-confirm-pw">
-                            <input type="password"  name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false">
+                            <input type="password"  name="password_confirmation" id="password-confirm" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="false" disabled>
                             <div class="input-group-append" data-password="false">
                                 <div class="input-group-text">
                                     <a href=""><i class="fas fa-eye"></i></a>
@@ -113,4 +119,65 @@
             </div>
         </div>
     </form>
+    @section('script')
+    <script>
+        $(document).ready(function() {
+            $("#form-old-password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#form-old-password input').attr("type") == "text"){
+                    $('#form-old-password input').attr('type', 'password');
+                    $('#form-old-password i').addClass( "fa-eye" );
+                    $('#form-old-password i').removeClass( "fa-eye-slash" );
+                }else if($('#form-old-password input').attr("type") == "password"){
+                    $('#form-old-password input').attr('type', 'text');
+                    $('#form-old-password i').removeClass( "fa-eye" );
+                    $('#form-old-password i').addClass("fa-eye-slash");
+                }
+            });
+    
+            $("#form-password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#form-password input').attr("type") == "text"){
+                    $('#form-password input').attr('type', 'password');
+                    $('#form-password i').addClass( "fa-eye" );
+                    $('#form-password i').removeClass( "fa-eye-slash" );
+                }else if($('#form-password input').attr("type") == "password"){
+                    $('#form-password input').attr('type', 'text');
+                    $('#form-password i').removeClass( "fa-eye" );
+                    $('#form-password i').addClass("fa-eye-slash");
+                }
+            });
+            
+            $("#form-confirm-pw a").on('click', function(event) {
+                event.preventDefault();
+                if($('#form-confirm-pw input').attr("type") == "text"){
+                    $('#form-confirm-pw input').attr('type', 'password');
+                    $('#form-confirm-pw i').addClass( "fa-eye" );
+                    $('#form-confirm-pw i').removeClass( "fa-eye-slash" );
+                }else if($('#form-confirm-pw input').attr("type") == "password"){
+                    $('#form-confirm-pw input').attr('type', 'text');
+                    $('#form-confirm-pw i').removeClass( "fa-eye" );
+                    $('#form-confirm-pw i').addClass("fa-eye-slash");
+                }
+            });
+        });
+    </script>
+    <script>
+        const isChangepwCB = document.getElementById('changepw');
+        const oldPwInput = document.getElementById('oldpassword');
+        const pwInput = document.getElementById('password');
+        const rePwInput = document.getElementById('password-confirm');
+        isChangepwCB.addEventListener('change',function(){
+            if(this.checked){
+                pwInput.disabled = false;
+                rePwInput.disabled = false;
+                oldPwInput.disabled = false;
+            }else{
+                pwInput.disabled = true;
+                rePwInput.disabled = true;
+                oldPwInput.disabled = true;
+            }
+        });
+    </script>
+    @endsection
 @endsection

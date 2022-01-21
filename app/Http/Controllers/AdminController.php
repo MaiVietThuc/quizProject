@@ -8,6 +8,7 @@ use App;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File; 
 
 class AdminController extends Controller
 {
@@ -307,7 +308,7 @@ class AdminController extends Controller
         $class->date_open = $request->date_open;
         $class->date_close = $request->date_close;
         $class->save(); 
-        return redirect('admin/class')->with('success','Thêm thành công!!');
+        return redirect('admin/managerClass/'.$class->id)->with('success','Thêm thành công!!');
     }
 
     public function postClassAddStudent(Request $request, $id)
@@ -576,7 +577,7 @@ class AdminController extends Controller
     public function deleteClass($id)
     {
         $class = App\cclass::find($id);
-        if($class->date_open< Carbon::now && $class)
+        if($class->date_open < Carbon::now() && $class->status ==1)
         {
             return redirect()->back()->with('error','Không thể xóa lớp đang học!');    
         }else{
@@ -649,6 +650,7 @@ class AdminController extends Controller
         $currAccount->name = $request ->name;
         $currAccount->email = $request ->email;
         if($request->hasFile('avatar')){
+            File::delete($currAccount->avatar);
             $file = $request->file('avatar');
             $nameAvatar = $currAccount->email.'_'.Str::random(4).'_'.$file->getClientOriginalName('avatar');
             $file->move('img/avatar',$nameAvatar);
@@ -665,6 +667,17 @@ class AdminController extends Controller
         return redirect('admin/')->with('success','Cập nhật tài khoản thành công!!');
     }
 
+
+    // ajax 
+    public function ajaxAddClass($idSubject)
+    {
+        $idTeachers = App\teach_subj::select('id_teacher')->where('id_subject',$idSubject)->get()->toArray();
+        $teachers = App\teacher::whereIn('id',$idTeachers)->get();
+        foreach($teachers as $tc)
+        {
+            echo "<option value='".$tc->id."'>".$tc->name."</option>";
+        }
+    }
   
 
 }

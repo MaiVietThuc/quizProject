@@ -141,7 +141,7 @@
                 var seconds = Math.floor(remainTime-(minutes*60));
                 displayRemainTime.value = minutes +" : "+seconds;
                 remainTime = remainTime -1;
-                while(remainTime == 600){
+                if(remainTime == 600){
                     alert("Còn 10 phút!");
                 }
                 if(remainTime == 0){
